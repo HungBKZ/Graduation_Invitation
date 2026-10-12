@@ -11,8 +11,6 @@ import {
   deleteGuest,
   bulkAddGuests,
   updateEventSettings,
-  getAllGuests,
-  getOverviewStats,
 } from "@/lib/db";
 import {
   setAdminSession,
@@ -65,10 +63,14 @@ export async function submitRsvpAction(data: {
       success: true,
       rsvp: saved,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMsg =
+      err instanceof Error
+        ? err.message
+        : "Không thể lưu phản hồi. Vui lòng thử lại sau.";
     return {
       success: false,
-      error: err.message || "Không thể lưu phản hồi. Vui lòng thử lại sau.",
+      error: errorMsg,
     };
   }
 }
@@ -126,8 +128,9 @@ export async function addGuestAction(name: string) {
     const guest = await addGuest(parsed.data.name);
     revalidatePath("/manage-pth-x7k29m");
     return { success: true, guest };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : "Lỗi tạo khách mời";
+    return { success: false, error: errorMsg };
   }
 }
 
@@ -142,8 +145,9 @@ export async function updateGuestNameAction(id: string, name: string) {
     const updated = await updateGuestName(parsed.data.id, parsed.data.name);
     revalidatePath("/manage-pth-x7k29m");
     return { success: true, guest: updated };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : "Lỗi cập nhật tên";
+    return { success: false, error: errorMsg };
   }
 }
 
@@ -153,8 +157,10 @@ export async function toggleGuestActiveAction(id: string, isActive: boolean) {
     const updated = await toggleGuestActive(id, isActive);
     revalidatePath("/manage-pth-x7k29m");
     return { success: true, guest: updated };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const errorMsg =
+      err instanceof Error ? err.message : "Lỗi cập nhật trạng thái";
+    return { success: false, error: errorMsg };
   }
 }
 
@@ -164,8 +170,9 @@ export async function deleteGuestAction(id: string) {
     await deleteGuest(id);
     revalidatePath("/manage-pth-x7k29m");
     return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : "Lỗi xóa khách mời";
+    return { success: false, error: errorMsg };
   }
 }
 
@@ -179,8 +186,10 @@ export async function bulkAddGuestsAction(names: string[]) {
     const created = await bulkAddGuests(names);
     revalidatePath("/manage-pth-x7k29m");
     return { success: true, count: created.length, guests: created };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const errorMsg =
+      err instanceof Error ? err.message : "Lỗi tạo khách hàng loạt";
+    return { success: false, error: errorMsg };
   }
 }
 
@@ -198,7 +207,9 @@ export async function updateSettingsAction(updates: Partial<EventSettings>) {
     revalidatePath("/manage-pth-x7k29m");
     revalidatePath("/");
     return { success: true, settings: updated };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+  } catch (err: unknown) {
+    const errorMsg =
+      err instanceof Error ? err.message : "Lỗi cập nhật cài đặt";
+    return { success: false, error: errorMsg };
   }
 }

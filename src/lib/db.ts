@@ -17,11 +17,50 @@ interface StoreData {
   rsvps: Record<string, RsvpResponse>; // keyed by guest_id
 }
 
+interface SupabaseGuestRow {
+  id: string;
+  name: string;
+  invitation_token: string;
+  is_active: boolean;
+  created_at: string;
+  first_opened_at: string | null;
+  rsvp_responses?: RsvpResponse | RsvpResponse[] | null;
+}
+
 const DATA_DIR = path.join(process.cwd(), ".data");
 const STORE_FILE = path.join(DATA_DIR, "store.json");
 
-// Ensure local file-store exists
+/**
+ * Validates database environment.
+ * In production, Supabase credentials MUST be present unless explicitly running
+ * local storage mode with ENABLE_LOCAL_STORAGE=true.
+ */
+function assertDatabaseConfig(isMutation: boolean = false) {
+  if (isSupabaseConfigured) {
+    return;
+  }
+
+  // If local storage is explicitly enabled (e.g. local development)
+  if (process.env.ENABLE_LOCAL_STORAGE === "true") {
+    return;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    if (isMutation) {
+      throw new Error(
+        "LỖI CƠ SỞ DỮ LIỆU: Supabase chưa được cấu hình trong môi trường Production. " +
+          "Vui lòng thiết lập NEXT_PUBLIC_SUPABASE_URL và SUPABASE_SERVICE_ROLE_KEY."
+      );
+    }
+    // For non-mutation build-time prerendering when Supabase credentials are not yet linked:
+    return;
+  }
+}
+
+// Ensure local file-store exists (development only)
 function getLocalStore(): StoreData {
+  assertDatabaseConfig();
+
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
@@ -92,6 +131,7 @@ function getLocalStore(): StoreData {
 }
 
 function saveLocalStore(data: StoreData) {
+  assertDatabaseConfig(true);
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
@@ -99,7 +139,7 @@ function saveLocalStore(data: StoreData) {
 }
 
 // ==========================================
-// UNIFIED DATABASE API
+// UNIFIED DATABASE PERSISTENCE API
 // ==========================================
 
 export async function getEventSettings(): Promise<EventSettings> {
@@ -111,9 +151,18 @@ export async function getEventSettings(): Promise<EventSettings> {
       .eq("id", "default")
       .single();
 
-    if (!error && data) {
-      return data as EventSettings;
+    if (error) {
+      // If table exists but row not seeded yet, seed default
+      if (error.code === "PGRST116") {
+        await supabase.from("event_settings").insert({
+          ...DEFAULT_EVENT_SETTINGS,
+        });
+        return DEFAULT_EVENT_SETTINGS;
+      }
+      throw new Error(`Lỗi tải cài đặt sự kiện từ Supabase: ${error.message}`);
     }
+
+    if (data) return data as EventSettings;
   }
 
   const store = getLocalStore();
@@ -136,9 +185,11 @@ export async function updateEventSettings(
       .select()
       .single();
 
-    if (!error && data) {
-      return data as EventSettings;
+    if (error) {
+      throw new Error(`Lỗi cập nhật cài đặt sự kiện trên Supabase: ${error.message}`);
     }
+
+    return data as EventSettings;
   }
 
   const store = getLocalStore();
@@ -160,7 +211,15 @@ export async function getGuestByToken(token: string): Promise<Guest | null> {
       .eq("is_active", true)
       .single();
 
-    if (!guestError && guestData) {
+    if (guestError) {
+      if (guestError.code === "PGRST116") {
+        // Record not found
+        return null;
+      }
+      throw new Error(`Lỗi truy vấn thư mời từ Supabase: ${guestError.message}`);
+    }
+
+    if (guestData) {
       const rsvp = Array.isArray(guestData.rsvp_responses)
         ? guestData.rsvp_responses[0]
         : guestData.rsvp_responses;
@@ -194,11 +253,15 @@ export async function markGuestOpened(token: string): Promise<void> {
   const supabase = getSupabaseServerClient();
   if (supabase) {
     // Only update if first_opened_at is null
-    await supabase
+    const { error } = await supabase
       .from("guests")
       .update({ first_opened_at: now })
       .eq("invitation_token", token)
       .is("first_opened_at", null);
+
+    if (error) {
+      console.error("Lỗi cập nhật thời điểm mở thư trên Supabase:", error.message);
+    }
     return;
   }
 
@@ -234,7 +297,7 @@ export async function saveRsvp(
       .single();
 
     if (error) {
-      throw new Error(`Failed to save RSVP: ${error.message}`);
+      throw new Error(`Lỗi lưu phản hồi RSVP trên Supabase: ${error.message}`);
     }
     return data as RsvpResponse;
   }
@@ -263,8 +326,12 @@ export async function getAllGuests(): Promise<Guest[]> {
       .select("*, rsvp_responses(*)")
       .order("created_at", { ascending: false });
 
-    if (!error && data) {
-      return data.map((item: any) => ({
+    if (error) {
+      throw new Error(`Lỗi tải danh sách khách mời từ Supabase: ${error.message}`);
+    }
+
+    if (data) {
+      return (data as unknown as SupabaseGuestRow[]).map((item) => ({
         id: item.id,
         name: item.name,
         invitation_token: item.invitation_token,
@@ -302,7 +369,9 @@ export async function addGuest(name: string): Promise<Guest> {
       .select()
       .single();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      throw new Error(`Lỗi tạo khách mời trên Supabase: ${error.message}`);
+    }
     return { ...data, rsvp: null };
   }
 
@@ -334,7 +403,9 @@ export async function updateGuestName(
       .select("*, rsvp_responses(*)")
       .single();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      throw new Error(`Lỗi cập nhật tên trên Supabase: ${error.message}`);
+    }
     return {
       ...data,
       rsvp: Array.isArray(data.rsvp_responses)
@@ -345,7 +416,7 @@ export async function updateGuestName(
 
   const store = getLocalStore();
   const guest = store.guests.find((g) => g.id === id);
-  if (!guest) throw new Error("Guest not found");
+  if (!guest) throw new Error("Khách mời không tồn tại");
   guest.name = name.trim();
   saveLocalStore(store);
   return { ...guest, rsvp: store.rsvps[guest.id] || null };
@@ -361,16 +432,23 @@ export async function toggleGuestActive(
       .from("guests")
       .update({ is_active: isActive })
       .eq("id", id)
-      .select()
+      .select("*, rsvp_responses(*)")
       .single();
 
-    if (error) throw new Error(error.message);
-    return data;
+    if (error) {
+      throw new Error(`Lỗi thay đổi trạng thái trên Supabase: ${error.message}`);
+    }
+    return {
+      ...data,
+      rsvp: Array.isArray(data.rsvp_responses)
+        ? data.rsvp_responses[0]
+        : data.rsvp_responses || null,
+    };
   }
 
   const store = getLocalStore();
   const guest = store.guests.find((g) => g.id === id);
-  if (!guest) throw new Error("Guest not found");
+  if (!guest) throw new Error("Khách mời không tồn tại");
   guest.is_active = isActive;
   saveLocalStore(store);
   return { ...guest, rsvp: store.rsvps[guest.id] || null };
@@ -380,7 +458,10 @@ export async function deleteGuest(id: string): Promise<boolean> {
   const supabase = getSupabaseServerClient();
   if (supabase) {
     const { error } = await supabase.from("guests").delete().eq("id", id);
-    return !error;
+    if (error) {
+      throw new Error(`Lỗi xóa khách mời trên Supabase: ${error.message}`);
+    }
+    return true;
   }
 
   const store = getLocalStore();
@@ -415,8 +496,13 @@ export async function bulkAddGuests(names: string[]): Promise<Guest[]> {
     }));
 
     const { data, error } = await supabase.from("guests").insert(rows).select();
-    if (error) throw new Error(error.message);
-    return (data || []).map((d: any) => ({ ...d, rsvp: null }));
+    if (error) {
+      throw new Error(`Lỗi tạo hàng loạt trên Supabase: ${error.message}`);
+    }
+    return ((data || []) as unknown as SupabaseGuestRow[]).map((d) => ({
+      ...d,
+      rsvp: null,
+    }));
   }
 
   const store = getLocalStore();
@@ -430,7 +516,9 @@ export async function getOverviewStats(): Promise<OverviewStats> {
   const activeGuests = guests.filter((g) => g.is_active);
 
   const totalInvitations = activeGuests.length;
-  const openedInvitations = activeGuests.filter((g) => g.first_opened_at !== null).length;
+  const openedInvitations = activeGuests.filter(
+    (g) => g.first_opened_at !== null
+  ).length;
   const confirmedAttendance = activeGuests.filter(
     (g) => g.rsvp?.response_status === "attending"
   ).length;

@@ -1,9 +1,8 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { getEventSettings, getGuestByToken } from "@/lib/db";
 import { ClientGuestPage } from "./ClientGuestPage";
 import { MonogramSeal } from "@/components/MonogramSeal";
-import { AlertCircle, ArrowLeft } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 
 interface GuestPageProps {
   params: Promise<{ token: string }>;
@@ -16,7 +15,6 @@ export async function generateMetadata({
 }: GuestPageProps): Promise<Metadata> {
   const { token } = await params;
   const guest = await getGuestByToken(token);
-  const settings = await getEventSettings();
 
   if (!guest) {
     return {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { motion } from "motion/react";
 import { Sparkles, CalendarCheck } from "lucide-react";
 
@@ -18,60 +18,66 @@ interface TimeLeft {
   isPast: boolean;
 }
 
+function calculateTimeLeft(
+  eventDate: string,
+  eventStartTime?: string | null
+): TimeLeft {
+  // Event target in Asia/Ho_Chi_Minh (UTC+7)
+  const timeStr = eventStartTime ? `${eventStartTime}:00` : "08:00:00";
+  const targetIso = `${eventDate}T${timeStr}+07:00`;
+  const targetTime = new Date(targetIso).getTime();
+  const now = new Date().getTime();
+  const diff = targetTime - now;
+
+  // Check if same day in Vietnam
+  const nowVn = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" })
+  );
+  const todayStr = `${nowVn.getFullYear()}-${String(
+    nowVn.getMonth() + 1
+  ).padStart(2, "0")}-${String(nowVn.getDate()).padStart(2, "0")}`;
+
+  const isToday = todayStr === eventDate;
+  const isPast = diff < 0 && !isToday;
+
+  if (diff <= 0) {
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      isToday,
+      isPast,
+    };
+  }
+
+  return {
+    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((diff / 1000 / 60) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+    isToday: false,
+    isPast: false,
+  };
+}
+
 export function CountdownTimer({
   eventDate,
   eventStartTime,
 }: CountdownTimerProps) {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() =>
+    calculateTimeLeft(eventDate, eventStartTime)
+  );
+
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   useEffect(() => {
-    setMounted(true);
-
-    const calculateTimeLeft = (): TimeLeft => {
-      // Event target in Asia/Ho_Chi_Minh (UTC+7)
-      // Format: YYYY-MM-DDTHH:mm:00+07:00
-      const timeStr = eventStartTime ? `${eventStartTime}:00` : "08:00:00";
-      const targetIso = `${eventDate}T${timeStr}+07:00`;
-      const targetTime = new Date(targetIso).getTime();
-      const now = new Date().getTime();
-      const diff = targetTime - now;
-
-      // Check if same day in Vietnam
-      const nowVn = new Date(
-        new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" })
-      );
-      const todayStr = `${nowVn.getFullYear()}-${String(
-        nowVn.getMonth() + 1
-      ).padStart(2, "0")}-${String(nowVn.getDate()).padStart(2, "0")}`;
-
-      const isToday = todayStr === eventDate;
-      const isPast = diff < 0 && !isToday;
-
-      if (diff <= 0) {
-        return {
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-          isToday,
-          isPast,
-        };
-      }
-
-      return {
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((diff / 1000 / 60) % 60),
-        seconds: Math.floor((diff / 1000) % 60),
-        isToday: false,
-        isPast: false,
-      };
-    };
-
-    setTimeLeft(calculateTimeLeft());
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      setTimeLeft(calculateTimeLeft(eventDate, eventStartTime));
     }, 1000);
 
     return () => clearInterval(timer);

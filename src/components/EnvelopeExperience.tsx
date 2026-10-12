@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Mail, Sparkles, ChevronDown } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { MonogramSeal } from "./MonogramSeal";
 import { recordEnvelopeOpenAction } from "@/app/actions";
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getEventSettings } from "@/lib/db";
 import { MonogramSeal } from "@/components/MonogramSeal";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { Calendar, GraduationCap, MapPin, Sparkles, KeyRound } from "lucide-react";
+import { Calendar, MapPin, Sparkles, KeyRound } from "lucide-react";
 import { ADMIN_ROUTE } from "@/lib/constants";
 
 export default async function HomePage() {

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "motion/react";
-import { Download, MapPin, Volume2, VolumeX, Heart } from "lucide-react";
+import { Download, MapPin, Volume2, VolumeX } from "lucide-react";
 import { MonogramSeal } from "./MonogramSeal";
 import { EventSettings } from "@/types";
 

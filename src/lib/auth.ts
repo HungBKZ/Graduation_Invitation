@@ -2,7 +2,6 @@ import crypto from "crypto";
 import { cookies } from "next/headers";
 import { ADMIN_SESSION_COOKIE } from "./constants";
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "hungpth2026";
 const SESSION_SECRET =
   process.env.SESSION_SECRET || "pth-grad-super-secret-key-salt-2026";
 
@@ -84,7 +83,22 @@ export function verifySessionToken(token: string | undefined): boolean {
 }
 
 export async function verifyAdminPassword(password: string): Promise<boolean> {
-  return password === ADMIN_PASSWORD;
+  const configuredPassword = process.env.ADMIN_PASSWORD;
+  
+  if (process.env.NODE_ENV === "production" && !configuredPassword) {
+    console.error(
+      "SECURITY ERROR: ADMIN_PASSWORD environment variable is not set in production!"
+    );
+    return false;
+  }
+
+  const expected = configuredPassword || "hungpth2026";
+  
+  // Timing safe comparison
+  const bufferA = Buffer.from(password);
+  const bufferB = Buffer.from(expected);
+  if (bufferA.length !== bufferB.length) return false;
+  return crypto.timingSafeEqual(bufferA, bufferB);
 }
 
 export async function setAdminSession() {

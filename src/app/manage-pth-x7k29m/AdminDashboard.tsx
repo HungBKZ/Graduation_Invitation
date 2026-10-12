@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
+import Image from "next/image";
 import * as XLSX from "xlsx";
 import {
   Users,
@@ -21,13 +22,7 @@ import {
   Search,
   Sparkles,
   LogOut,
-  RefreshCw,
-  Clock,
-  MapPin,
-  Music,
   CheckCircle2,
-  HelpCircle,
-  XCircle,
   AlertTriangle,
   Database,
   Smartphone,
@@ -44,7 +39,6 @@ import {
   updateSettingsAction,
 } from "@/app/actions";
 import { MonogramSeal } from "@/components/MonogramSeal";
-import { InvitationExportCard } from "@/components/InvitationExportCard";
 
 interface AdminDashboardProps {
   initialGuests: Guest[];
@@ -65,7 +59,7 @@ export function AdminDashboard({
 
   const [guests, setGuests] = useState<Guest[]>(initialGuests);
   const [settings, setSettings] = useState<EventSettings>(initialSettings);
-  const [stats, setStats] = useState<OverviewStats>(initialStats);
+  const stats = initialStats;
   const [isPending, startTransition] = useTransition();
 
   // Toast / Status notice
@@ -230,7 +224,7 @@ export function AdminDashboard({
         const wb = XLSX.read(bstr, { type: "binary" });
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
-        const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
+        const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as unknown[][];
 
         // Extract first column or column with guest names
         const names: string[] = [];
@@ -251,7 +245,7 @@ export function AdminDashboard({
         setPasteNamesText(names.join("\n"));
         handleAnalyzeNames(names.join("\n"));
         showNotice(`Đã đọc ${names.length} tên từ file!`);
-      } catch (err) {
+      } catch {
         showNotice("Lỗi khi đọc file. Vui lòng kiểm tra định dạng CSV hoặc XLSX.", "error");
       }
     };
@@ -292,6 +286,74 @@ export function AdminDashboard({
     guests[0]?.name || "Nguyễn Minh Anh"
   );
   const [settingsForm, setSettingsForm] = useState<EventSettings>({ ...settings });
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [isUploadingAudio, setIsUploadingAudio] = useState(false);
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingPhoto(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (data.success && data.url) {
+        setSettingsForm((prev) => ({
+          ...prev,
+          graduate_photo_url: data.url,
+        }));
+        await updateSettingsAction({ graduate_photo_url: data.url });
+        setSettings((prev) => ({ ...prev, graduate_photo_url: data.url }));
+        showNotice("Đã tải lên và cập nhật ảnh cử nhân thành công!");
+      } else {
+        showNotice(data.error || "Lỗi tải ảnh lên", "error");
+      }
+    } catch {
+      showNotice("Lỗi kết nối khi tải ảnh", "error");
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
+  const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingAudio(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (data.success && data.url) {
+        setSettingsForm((prev) => ({
+          ...prev,
+          background_music_url: data.url,
+        }));
+        await updateSettingsAction({ background_music_url: data.url });
+        setSettings((prev) => ({ ...prev, background_music_url: data.url }));
+        showNotice("Đã tải lên và cập nhật file nhạc thành công!");
+      } else {
+        showNotice(data.error || "Lỗi tải file nhạc", "error");
+      }
+    } catch {
+      showNotice("Lỗi kết nối khi tải file nhạc", "error");
+    } finally {
+      setIsUploadingAudio(false);
+    }
+  };
 
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -377,7 +439,17 @@ export function AdminDashboard({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() =>
+                  setActiveTab(
+                    tab.id as
+                      | "overview"
+                      | "guests"
+                      | "bulk"
+                      | "rsvps"
+                      | "designer"
+                      | "settings"
+                  )
+                }
                 className={`flex items-center gap-2 py-3 px-3.5 sm:px-4 text-xs font-medium border-b-2 transition-all cursor-pointer ${
                   isActive
                     ? "border-[#D6B675] text-[#D6B675] font-semibold"
@@ -569,7 +641,7 @@ export function AdminDashboard({
                             <p className="font-semibold text-[#F6F1E8]">{g.name}</p>
                             {g.rsvp?.personal_message && (
                               <p className="text-[11px] text-[#9DAABD] italic line-clamp-1 mt-0.5">
-                                "{g.rsvp.personal_message}"
+                                &ldquo;{g.rsvp.personal_message}&rdquo;
                               </p>
                             )}
                           </div>
@@ -619,7 +691,11 @@ export function AdminDashboard({
               <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
                 <select
                   value={rsvpFilter}
-                  onChange={(e) => setRsvpFilter(e.target.value as any)}
+                  onChange={(e) =>
+                    setRsvpFilter(
+                      e.target.value as "all" | RsvpStatus | "pending"
+                    )
+                  }
                   className="py-2 px-3 rounded-xl bg-[#0F1E33] border border-[#D6B675]/25 text-xs text-[#F6F1E8] focus:outline-none"
                 >
                   <option value="all">Tất cả trạng thái</option>
@@ -1122,7 +1198,7 @@ export function AdminDashboard({
 
                         {g.rsvp?.personal_message ? (
                           <div className="p-3 rounded-xl bg-[#0F1E33] border border-[#D6B675]/15 text-xs text-[#F6F1E8]/90 italic my-3 leading-relaxed">
-                            "{g.rsvp.personal_message}"
+                            &ldquo;{g.rsvp.personal_message}&rdquo;
                           </div>
                         ) : (
                           <p className="text-xs text-[#9DAABD]/60 italic my-3">
@@ -1164,7 +1240,34 @@ export function AdminDashboard({
 
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-[#D6B675] font-semibold mb-1.5">
-                      URL Ảnh Toàn Thân Phan Thành Hưng
+                      Ảnh Toàn Thân Phan Thành Hưng
+                    </label>
+
+                    {/* Direct File Upload Button */}
+                    <div className="mb-3 p-3.5 rounded-xl border border-dashed border-[#D6B675]/40 bg-[#0F1E33] flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div className="text-left">
+                        <p className="text-xs font-semibold text-[#F6F1E8]">
+                          Tải ảnh từ máy tính (PNG / JPEG / WebP)
+                        </p>
+                        <p className="text-[11px] text-[#9DAABD] mt-0.5">
+                          Khuyến nghị ảnh toàn thân đứng thẳng từ đầu tới chân
+                        </p>
+                      </div>
+                      <label className="px-4 py-2 rounded-xl bg-[#172A46] border border-[#D6B675] text-[#D6B675] hover:bg-[#D6B675] hover:text-[#0B1930] text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 shrink-0">
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>{isUploadingPhoto ? "Đang tải lên..." : "Chọn ảnh từ máy"}</span>
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,image/webp"
+                          onChange={handlePhotoUpload}
+                          disabled={isUploadingPhoto}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+
+                    <label className="block text-[11px] text-[#9DAABD] mb-1">
+                      Hoặc nhập URL ảnh trực tiếp:
                     </label>
                     <input
                       type="url"
@@ -1178,9 +1281,6 @@ export function AdminDashboard({
                       }
                       className="w-full px-3.5 py-2.5 rounded-xl bg-[#0F1E33] border border-[#D6B675]/30 text-xs text-[#F6F1E8] focus:outline-none focus:border-[#D6B675]"
                     />
-                    <p className="text-[11px] text-[#9DAABD] mt-1">
-                      Khuyến nghị ảnh toàn thân định dạng PNG trong suốt hoặc ảnh chụp trang trọng. Nếu để trống, hệ thống hiển thị Monogram hoàng gia PTH.
-                    </p>
                   </div>
 
                   <div>
@@ -1283,7 +1383,24 @@ export function AdminDashboard({
                     {settingsForm.graduate_name}
                   </h3>
 
-                  <div className="my-4 py-2 border-y border-[#D6B675]/30 w-full max-w-xs">
+                  {/* Render photo in designer mockup */}
+                  {settingsForm.graduate_photo_url ? (
+                    <div className="relative w-44 h-60 rounded-xl overflow-hidden border border-[#D6B675]/40 my-3 shadow-xl bg-[#172A46]">
+                      <Image
+                        src={settingsForm.graduate_photo_url}
+                        alt="Preview"
+                        fill
+                        className="object-contain"
+                        unoptimized
+                      />
+                    </div>
+                  ) : (
+                    <div className="my-3 py-6 px-4 rounded-xl border border-dashed border-[#D6B675]/30 text-[11px] text-[#9DAABD] max-w-xs">
+                      Chưa tải ảnh lên. Hệ thống sẽ hiển thị Monogram hoàng gia PTH thay thế.
+                    </div>
+                  )}
+
+                  <div className="my-2 py-2 border-y border-[#D6B675]/30 w-full max-w-xs">
                     <p className="text-[11px] text-[#9DAABD] uppercase tracking-wider">
                       Trân trọng kính mời
                     </p>
@@ -1453,14 +1570,29 @@ export function AdminDashboard({
                     className="w-full px-3.5 py-2.5 rounded-xl bg-[#0F1E33] border border-[#D6B675]/30 text-xs text-[#F6F1E8] focus:outline-none focus:border-[#D6B675]"
                   />
                   <p className="text-[11px] text-[#9DAABD] mt-1">
-                    Khi điền link này, nút "Xem vị trí trên Google Maps" trên thư mời của khách sẽ kích hoạt.
+                    Khi điền link này, nút &ldquo;Xem vị trí trên Google Maps&rdquo; trên thư mời của khách sẽ kích hoạt.
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-xs uppercase tracking-wider text-[#D6B675] font-semibold mb-1">
-                    Đường Dẫn File Nhạc Nền (Audio URL)
+                    File Nhạc Nền Sự Kiện (Audio)
                   </label>
+                  <div className="mb-2 p-3 rounded-xl border border-dashed border-[#D6B675]/40 bg-[#0F1E33] flex items-center justify-between gap-3">
+                    <p className="text-xs text-[#9DAABD]">
+                      Tải file âm thanh (.mp3 / .wav / .m4a)
+                    </p>
+                    <label className="px-3.5 py-1.5 rounded-lg bg-[#172A46] border border-[#D6B675] text-[#D6B675] text-xs font-semibold cursor-pointer shrink-0 hover:bg-[#D6B675] hover:text-[#0B1930] transition-colors">
+                      <span>{isUploadingAudio ? "Đang tải..." : "Tải từ máy"}</span>
+                      <input
+                        type="file"
+                        accept="audio/*"
+                        onChange={handleAudioUpload}
+                        disabled={isUploadingAudio}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
                   <input
                     type="url"
                     placeholder="https://.../music.mp3"
@@ -1474,7 +1606,7 @@ export function AdminDashboard({
                     className="w-full px-3.5 py-2.5 rounded-xl bg-[#0F1E33] border border-[#D6B675]/30 text-xs text-[#F6F1E8] focus:outline-none focus:border-[#D6B675]"
                   />
                   <p className="text-[11px] text-[#9DAABD] mt-1">
-                    Link trực tiếp đến file âm thanh (.mp3 / .m4a / .wav) để phát nhạc du dương khi mở thư.
+                    Link trực tiếp đến file âm thanh hoặc file đã tải lên từ máy tính.
                   </p>
                 </div>
 
