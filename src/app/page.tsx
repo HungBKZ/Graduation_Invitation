@@ -1,69 +1,84 @@
-import Image from "next/image";
+import Link from "next/link";
+import { getEventSettings } from "@/lib/db";
+import { MonogramSeal } from "@/components/MonogramSeal";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import { Calendar, GraduationCap, MapPin, Sparkles, KeyRound } from "lucide-react";
+import { ADMIN_ROUTE } from "@/lib/constants";
 
-export default function Home() {
+export default async function HomePage() {
+  const settings = await getEventSettings();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen bg-[#0B1930] text-[#F6F1E8] flex flex-col justify-between items-center px-4 py-12 relative overflow-hidden select-none">
+      {/* Background radial gradients */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#172A46]/40 blur-[130px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(#D6B675_0.5px,transparent_0.5px)] [background-size:24px_24px] opacity-10" />
+      </div>
+
+      {/* Header Monogram */}
+      <header className="relative z-10 flex flex-col items-center text-center mt-6">
+        <MonogramSeal size={90} className="mb-4 drop-shadow-2xl" />
+        <span className="text-xs tracking-[0.35em] text-[#D6B675] uppercase font-sans font-semibold">
+          Graduation Celebration · 2026
+        </span>
+        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#F6F1E8] mt-3 gold-gradient-text">
+          {settings.graduate_name}
+        </h1>
+        <p className="text-xs sm:text-sm text-[#9DAABD] tracking-wider uppercase font-sans mt-2">
+          {settings.major} · {settings.cohort}
+        </p>
+      </header>
+
+      {/* Main Info Card */}
+      <main className="relative z-10 w-full max-w-xl navy-card rounded-2xl p-6 sm:p-10 my-8 text-center gold-border-corner">
+        <div className="flex flex-col gap-3 text-xs sm:text-sm text-[#F6F1E8]/90 font-sans max-w-md mx-auto mb-6">
+          <p className="flex items-center justify-center gap-2">
+            <Calendar className="w-4 h-4 text-[#D6B675]" />
+            <span>Chủ nhật, ngày 25 tháng 10 năm 2026</span>
+          </p>
+          <p className="flex items-center justify-center gap-2">
+            <MapPin className="w-4 h-4 text-[#D6B675]" />
+            <span>{settings.university}</span>
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <CountdownTimer
+          eventDate={settings.event_date}
+          eventStartTime={settings.event_start_time}
+        />
+
+        <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-[#D6B675] to-transparent mx-auto my-6" />
+
+        <div className="space-y-3">
+          <p className="text-xs text-[#9DAABD] font-light leading-relaxed">
+            Trang web sử dụng liên kết cá nhân hóa cho từng khách mời với phong bì thư tương tác độc quyền.
+          </p>
+
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/i/demoMinhAnh"
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-gradient-to-r from-[#D6B675] via-[#E8D19F] to-[#D6B675] text-[#0B1930] font-sans font-semibold text-xs tracking-wider uppercase shadow-[0_4px_20px_rgba(214,182,117,0.3)] hover:shadow-[0_6px_25px_rgba(214,182,117,0.5)] transition-all flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Xem Thư Mời Mẫu (Demo)</span>
+            </Link>
+
+            <Link
+              href={ADMIN_ROUTE}
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#172A46] border border-[#D6B675]/40 text-[#D6B675] hover:bg-[#1E365A] font-sans text-xs font-semibold tracking-wider uppercase transition-all flex items-center justify-center gap-2"
+            >
+              <KeyRound className="w-3.5 h-3.5" />
+              <span>Bảng Quản Trị</span>
+            </Link>
+          </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="relative z-10 text-center text-xs text-[#9DAABD]/70 font-sans pb-4">
+        <p>The Graduation of Phan Thành Hưng · FPT University Can Tho Campus</p>
+      </footer>
     </div>
   );
 }
