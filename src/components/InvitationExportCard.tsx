@@ -9,15 +9,6 @@ interface InvitationExportCardProps {
   settings: EventSettings;
 }
 
-const MEMORY_LABELS = [
-  "Hội bạn thân K18",
-  "Chuyến đi thanh xuân",
-  "Những ngày bên nhau",
-  "Giảng đường FPTU",
-  "Nụ cười rạng rỡ",
-  "Hành trình trưởng thành",
-];
-
 export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportCardProps>(
   ({ guestName, settings }, ref) => {
     const memoryPhotos =
@@ -37,52 +28,152 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
           height: "1920px",
           backgroundColor: "#FAF6F0",
         }}
-        className="relative flex flex-col justify-between p-12 text-[#1E2530] overflow-hidden select-none font-sans"
+        className="relative w-[1080px] h-[1920px] overflow-hidden select-none font-sans flex flex-col justify-between"
       >
-        {/* Ambient Warm Sunshine Glow */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-[#FFF5EB] rounded-full blur-[160px]" />
+        {/* ========================================================
+            LAYER 1: FULL-BLEED BACKGROUND COLLAGE (Scrapbook Grid)
+            ======================================================== */}
+        <div className="absolute inset-0 grid grid-cols-12 grid-rows-12 gap-3 p-3 bg-[#EADBCE]">
+          
+          {/* PHOTO 1: Top-Left (Col 1-6, Row 1-4) - Friends Selfie in Forest */}
+          <div className="relative col-span-6 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
+            {memoryPhotos[1] && (
+              <Image
+                src={memoryPhotos[1]}
+                alt="Kỷ niệm 1"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            )}
+            <div className="absolute inset-0 bg-[#2D1B14]/10" />
+          </div>
+
+          {/* PHOTO 2: Top-Right (Col 7-12, Row 1-4) - Friends on Rock with Blue Sky */}
+          <div className="relative col-span-6 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
+            {memoryPhotos[2] && (
+              <Image
+                src={memoryPhotos[2]}
+                alt="Kỷ niệm 2"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            )}
+            <div className="absolute inset-0 bg-[#2D1B14]/10" />
+          </div>
+
+          {/* PHOTO 0: Middle-Left (Col 1-5, Row 5-9) - 4 Friends in front of Building */}
+          <div className="relative col-span-5 row-span-5 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
+            {memoryPhotos[0] && (
+              <Image
+                src={memoryPhotos[0]}
+                alt="Kỷ niệm 0"
+                fill
+                className="object-cover object-right"
+                unoptimized
+              />
+            )}
+            <div className="absolute inset-0 bg-[#2D1B14]/10" />
+          </div>
+
+          {/* PHOTO 3: Middle-Right Top (Col 6-12, Row 5-8) - Stage Awards Ceremony */}
+          <div className="relative col-span-7 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
+            {memoryPhotos[3] && (
+              <Image
+                src={memoryPhotos[3]}
+                alt="Kỷ niệm 3"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            )}
+            <div className="absolute inset-0 bg-[#2D1B14]/10" />
+          </div>
+
+          {/* PHOTO 4: Middle-Right Bottom Left (Col 6-8, Row 9-12) - Studio Pose */}
+          <div className="relative col-span-3 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
+            {memoryPhotos[4] && (
+              <Image
+                src={memoryPhotos[4]}
+                alt="Kỷ niệm 4"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            )}
+            <div className="absolute inset-0 bg-[#2D1B14]/10" />
+          </div>
+
+          {/* PHOTO 5: Middle-Right Bottom Right (Col 9-12, Row 9-12) - Military Uniforms */}
+          <div className="relative col-span-4 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
+            {memoryPhotos[5] && (
+              <Image
+                src={memoryPhotos[5]}
+                alt="Kỷ niệm 5"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            )}
+            <div className="absolute inset-0 bg-[#2D1B14]/10" />
+          </div>
+
+          {/* Bottom Left Placeholder behind cutout */}
+          <div className="relative col-span-5 row-span-3 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
+            {memoryPhotos[0] && (
+              <Image
+                src={memoryPhotos[0]}
+                alt="Kỷ niệm nền"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            )}
+            <div className="absolute inset-0 bg-[#2D1B14]/15" />
+          </div>
         </div>
 
-        {/* Outer Double Frame */}
-        <div className="absolute inset-8 border-2 border-[#C5A059]/40 pointer-events-none rounded-[40px]">
-          <div className="absolute inset-3 border border-[#EADBCE] rounded-[32px]" />
-        </div>
+        {/* Vintage Paper Wash & Soft Sunlight Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FAF6F0]/85 via-transparent to-[#FAF6F0]/80 pointer-events-none" />
 
-        {/* Top Header */}
-        <div className="relative z-10 pt-8 text-center flex flex-col items-center">
-          {/* Hand-drawn Flower & Star Doodles (Top Corners) */}
-          <div className="absolute top-6 left-8 text-[#9E1B32]">
-            <svg width="60" height="60" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M20 5 C22 12, 28 18, 35 20 C28 22, 22 28, 20 35 C18 28, 12 22, 5 20 C12 18, 18 12, 20 5 Z" />
-              <circle cx="20" cy="20" r="3" fill="#C5A059" stroke="none" />
+        {/* ========================================================
+            LAYER 2: TOP HEADER OVERLAY (Festive Ceremony Title)
+            ======================================================== */}
+        <div className="relative z-30 pt-12 pb-6 px-12 text-center bg-gradient-to-b from-[#FFFDF9]/95 via-[#FFFDF9]/85 to-transparent">
+          {/* Flower Doodle (Top Left) */}
+          <div className="absolute top-10 left-10 text-[#9E1B32]">
+            <svg width="64" height="64" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 4 C22 12, 28 18, 36 20 C28 22, 22 28, 20 36 C18 28, 12 22, 4 20 C12 18, 18 12, 20 4 Z" />
+              <circle cx="20" cy="20" r="3.5" fill="#C5A059" stroke="none" />
             </svg>
           </div>
 
-          <div className="absolute top-6 right-8 text-[#9E1B32]">
-            <svg width="60" height="60" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M20 6 L23 15 L32 15 L25 21 L28 30 L20 24 L12 30 L15 21 L8 15 L17 15 Z" />
+          {/* Star Doodle (Top Right) */}
+          <div className="absolute top-10 right-10 text-[#9E1B32]">
+            <svg width="64" height="64" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 5 L23.5 15 L34 15 L25.5 21.5 L29 32 L20 25.5 L11 32 L14.5 21.5 L6 15 L16.5 15 Z" />
             </svg>
           </div>
 
-          <span className="text-xl font-sans tracking-[0.4em] uppercase text-[#718096] font-semibold">
-            Thư Mời Tham Dự
+          <span className="text-xl font-sans tracking-[0.45em] uppercase text-[#4A5568] font-extrabold">
+            THƯ MỜI THAM DỰ
           </span>
 
-          <h1 className="font-serif text-6xl font-black tracking-tight text-[#9E1B32] uppercase mt-2 drop-shadow-sm leading-tight">
-            Lễ Tốt Nghiệp
+          <h1 className="font-serif text-7xl font-black tracking-tight text-[#9E1B32] uppercase mt-1 drop-shadow-sm leading-none">
+            LỄ TỐT NGHIỆP
           </h1>
 
-          <p className="font-serif italic text-2xl text-[#C5A059] font-medium tracking-wide mt-2">
+          <p className="font-serif italic text-2xl text-[#C5A059] font-bold tracking-wide mt-2">
             Graduation Ceremony 2026 · Trường Đại Học FPT Phân Hiệu Cần Thơ
           </p>
         </div>
 
-        {/* Central Visual: Cutout Graduate on the Left + Pinned Guest Tag & Info on the Right */}
-        <div className="relative z-10 w-full h-[620px] bg-[#FFFFFF] rounded-3xl p-8 border-2 border-[#EADBCE] shadow-lg flex items-center justify-between">
-          
-          {/* Left: Cutout of Graduate */}
-          <div className="relative w-[45%] h-full flex items-end justify-center">
+        {/* ========================================================
+            LAYER 3: FOREGROUND CUTOUT OF HƯNG (Big, Sharp, Sticker)
+            ======================================================== */}
+        <div className="absolute left-[-20px] bottom-[140px] w-[620px] h-[1060px] pointer-events-none z-20 flex items-end justify-center">
+          <div className="relative w-full h-full">
             <Image
               src={graduatePhoto}
               alt={settings.graduate_name}
@@ -91,91 +182,74 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
               unoptimized
             />
           </div>
+        </div>
 
-          {/* Right: Personalized Tag + Event Info */}
-          <div className="w-[52%] flex flex-col justify-between h-full py-4">
-            {/* Pinned Tag */}
-            <div className="relative bg-[#FFFDF9] border-2 border-[#EADBCE] rounded-3xl p-6 shadow-md rotate-[-1deg]">
-              <div className="text-base font-sans text-[#7A1022] font-bold tracking-wider uppercase">
-                Thương mời
-              </div>
-              <h2 className="font-handwriting text-5xl font-bold text-[#9E1B32] tracking-wide mt-1 leading-tight truncate">
-                {guestName}
-              </h2>
-              <p className="text-base font-sans text-[#718096] italic mt-1">
-                đến chung vui ngày nhận bằng cùng Hưng ✨
-              </p>
-            </div>
+        {/* ========================================================
+            LAYER 4: PINNED MEMO CARD (Guest Name Calligraphy)
+            ======================================================== */}
+        <div className="absolute left-8 bottom-16 z-30 bg-[#FFFDF9] border-2 border-[#EADBCE] rounded-3xl p-7 shadow-[0_20px_50px_rgba(0,0,0,0.22)] max-w-[430px] rotate-[-2deg]">
+          {/* Red Star Pin */}
+          <div className="absolute -top-6 left-8 w-12 h-12 flex items-center justify-center text-[#9E1B32] drop-shadow-md">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="#9E1B32" stroke="#FFFDF9" strokeWidth="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </div>
 
-            {/* Event schedule badge */}
-            <div className="bg-[#FAF5EE] border-2 border-[#EADBCE] rounded-3xl p-6 mt-4">
-              <div className="text-lg font-sans font-bold text-[#9E1B32] uppercase tracking-wider mb-2">
-                06:30 - 11:15 · Chủ Nhật, 25/10/2026
-              </div>
-              <div className="text-2xl font-serif font-extrabold text-[#1E2530] uppercase">
-                Sân Vận Động
-              </div>
-              <div className="text-lg font-sans text-[#5A6474]">
-                Trường Đại học FPT Phân Hiệu Cần Thơ
-              </div>
-              <div className="text-base font-sans text-[#8C9BAE] mt-1">
-                Số 600 Nguyễn Văn Cừ, Phường An Bình, TP. Cần Thơ
-              </div>
-            </div>
+          <div className="text-sm font-sans text-[#7A1022] font-bold tracking-widest uppercase mt-1">
+            Thương mời
+          </div>
+          <h2 className="font-handwriting text-5xl font-bold text-[#9E1B32] tracking-wide mt-1 leading-tight truncate">
+            {guestName}
+          </h2>
+          <p className="text-sm font-sans text-[#718096] italic mt-1 leading-snug">
+            đến chung vui ngày nhận bằng cùng Hưng ✨
+          </p>
+        </div>
 
-            <div className="flex items-center justify-between text-base px-2 text-[#718096] mt-2">
-              <span className="font-bold text-[#9E1B32]">
-                Tân Cử Nhân: {settings.graduate_name}
-              </span>
-              <span>{settings.cohort} · {settings.major}</span>
-            </div>
+        {/* ========================================================
+            LAYER 5: TORN PAPER SCHEDULE TICKET (Bottom-Right Banner)
+            ======================================================== */}
+        <div className="absolute right-0 bottom-0 z-25 w-[560px] rounded-tl-[40px] bg-[#FFFDF9] border-t-2 border-l-2 border-[#EADBCE] p-8 shadow-[0_25px_60px_rgba(0,0,0,0.25)] text-right">
+          {/* Jagged Torn Paper Decorative Top Accent */}
+          <div className="absolute -top-5 inset-x-0 h-5 overflow-hidden pointer-events-none">
+            <svg viewBox="0 0 560 20" preserveAspectRatio="none" className="w-full h-full fill-[#FFFDF9]">
+              <path d="M 0 20 L 0 10 Q 20 0 40 10 T 80 10 T 120 5 T 160 12 T 200 4 T 240 12 T 280 6 T 320 14 T 360 4 T 400 12 T 440 5 T 480 12 T 520 6 T 560 10 L 560 20 Z" />
+            </svg>
+          </div>
+
+          <div className="text-base font-sans font-extrabold tracking-wider text-[#9E1B32] uppercase">
+            THỜI GIAN: 06:30 - 11:15
+          </div>
+
+          <div className="font-serif text-6xl font-black text-[#7D1124] my-2 leading-none tracking-tight">
+            25 / 10 / 2026
+          </div>
+
+          <div className="text-xl font-sans font-black text-[#1E2530] uppercase mt-2">
+            SÂN VẬN ĐỘNG
+          </div>
+          <div className="text-lg font-sans font-bold text-[#5A6474]">
+            TRƯỜNG ĐẠI HỌC FPT CẦN THƠ
+          </div>
+          <div className="text-sm font-sans text-[#8C9BAE] mt-1">
+            Số 600 Nguyễn Văn Cừ, Phường An Bình, TP. Cần Thơ
+          </div>
+
+          <div className="mt-4 pt-3 border-t-2 border-[#EADBCE] flex items-center justify-end gap-2 text-sm font-bold text-[#C5A059] uppercase tracking-wider">
+            <span>✦ Đón khách & chụp ảnh check-in từ 06:30</span>
+          </div>
+
+          <div className="mt-2 text-xs text-[#718096]">
+            SĐT: 0867-009-847 · Tân Cử Nhân Phan Thành Hưng
           </div>
         </div>
 
-        {/* Dedicated Unblocked Memory Photos (6 Photos, 100% VISIBLE!) */}
-        <div className="relative z-10 w-full bg-[#FFFFFF] rounded-3xl p-8 border-2 border-[#EADBCE] shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-serif text-2xl font-bold text-[#7D1124]">
-              Khoảnh Khắc Kỷ Niệm Thanh Xuân (2022 - 2026)
-            </h3>
-            <span className="text-lg text-[#C5A059] font-serif italic">
-              FPT University Memories
-            </span>
-          </div>
-
-          <div className="grid grid-cols-3 gap-5">
-            {memoryPhotos.slice(0, 6).map((url, idx) => (
-              <div
-                key={idx}
-                className="bg-[#FFFFFF] rounded-2xl p-3 pb-4 border border-[#EADBCE] shadow-sm flex flex-col"
-              >
-                <div className="relative w-full h-[180px] rounded-xl overflow-hidden bg-[#FAF5EE]">
-                  <Image
-                    src={url}
-                    alt={MEMORY_LABELS[idx] || `Kỷ niệm ${idx + 1}`}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                </div>
-                <div className="text-sm font-sans font-medium text-[#5A6474] mt-2 text-center">
-                  {MEMORY_LABELS[idx] || `Kỷ niệm ${idx + 1}`}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Footer Sub-banner */}
-        <div className="relative z-10 pb-6 text-center flex flex-col items-center">
-          <p className="text-xl font-serif italic text-[#718096]">
-            With love and gratitude,
-          </p>
-          <p className="text-3xl font-serif font-bold text-[#9E1B32] tracking-wide mt-1">
-            {settings.graduate_name}
-          </p>
-          <span className="text-base text-[#C5A059] uppercase tracking-[0.25em] font-semibold mt-1">
-            Software Engineering K18 · FPT UNIVERSITY CAN THO
+        {/* ========================================================
+            LAYER 6: BOTTOM SLIM SIGNATURE FOOTER
+            ======================================================== */}
+        <div className="relative z-30 pb-3 text-center pointer-events-none">
+          <span className="text-xs text-[#718096]/70 uppercase tracking-[0.25em] font-semibold">
+            THE GRADUATION OF PHAN THÀNH HƯNG · FPT UNIVERSITY CAN THO
           </span>
         </div>
       </div>
