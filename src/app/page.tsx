@@ -5,8 +5,7 @@ import { GraduationHero } from "@/components/GraduationHero";
 import { CeremonyTimeline } from "@/components/CeremonyTimeline";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { LocationSection } from "@/components/LocationSection";
-import { Calendar, MapPin, Sparkles, KeyRound, Heart } from "lucide-react";
-import { ADMIN_ROUTE } from "@/lib/constants";
+import { Calendar, MapPin, Sparkles, Heart } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -39,21 +38,13 @@ export default async function HomePage() {
           Mỗi khách mời sẽ nhận được một đường link cá nhân hóa chứa phong bì thư tương tác, thiệp mời riêng biệt và biểu mẫu phản hồi RSVP.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="flex items-center justify-center">
           <Link
             href="/i/demoMinhAnh"
-            className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#9E1B32] hover:bg-[#7D1124] text-white font-sans font-semibold text-xs tracking-wider uppercase shadow-[0_4px_20px_rgba(158,27,50,0.25)] hover:shadow-[0_6px_25px_rgba(158,27,50,0.4)] transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#9E1B32] hover:bg-[#7D1124] text-white font-sans font-semibold text-xs tracking-wider uppercase shadow-[0_4px_20px_rgba(158,27,50,0.25)] hover:shadow-[0_6px_25px_rgba(158,27,50,0.4)] transition-all flex items-center justify-center gap-2"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#F3E5C8]" />
             <span>Trải nghiệm Thư Mời Mẫu (Demo)</span>
-          </Link>
-
-          <Link
-            href={ADMIN_ROUTE}
-            className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#FAF5EE] border border-[#EADBCE] text-[#7D1124] hover:bg-[#F3E7D5] font-sans text-xs font-semibold tracking-wider uppercase transition-all flex items-center justify-center gap-2"
-          >
-            <KeyRound className="w-3.5 h-3.5 text-[#9E1B32]" />
-            <span>Bảng Quản Trị</span>
           </Link>
         </div>
       </div>
