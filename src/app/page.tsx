@@ -8,6 +8,8 @@ import { LocationSection } from "@/components/LocationSection";
 import { Calendar, MapPin, Sparkles, KeyRound, Heart } from "lucide-react";
 import { ADMIN_ROUTE } from "@/lib/constants";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const settings = await getEventSettings();
 

@@ -145,24 +145,34 @@ function saveLocalStore(data: StoreData) {
 export async function getEventSettings(): Promise<EventSettings> {
   const supabase = getSupabaseServerClient();
   if (supabase) {
-    const { data, error } = await supabase
-      .from("event_settings")
-      .select("*")
-      .eq("id", "default")
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from("event_settings")
+        .select("*")
+        .eq("id", "default")
+        .single();
 
-    if (error) {
-      // If table exists but row not seeded yet, seed default
-      if (error.code === "PGRST116") {
-        await supabase.from("event_settings").insert({
-          ...DEFAULT_EVENT_SETTINGS,
-        });
+      if (error) {
+        // If table exists but row not seeded yet, seed default
+        if (error.code === "PGRST116") {
+          try {
+            await supabase.from("event_settings").insert({
+              ...DEFAULT_EVENT_SETTINGS,
+            });
+          } catch {
+            // ignore insert failure
+          }
+          return DEFAULT_EVENT_SETTINGS;
+        }
+        console.warn("Supabase event_settings warning (fallback to default):", error.message);
         return DEFAULT_EVENT_SETTINGS;
       }
-      throw new Error(`Lỗi tải cài đặt sự kiện từ Supabase: ${error.message}`);
-    }
 
-    if (data) return normalizeSettings(data as Partial<EventSettings>);
+      if (data) return normalizeSettings(data as Partial<EventSettings>);
+    } catch (err: unknown) {
+      console.warn("Supabase fetch error in getEventSettings (fallback to default):", err);
+      return DEFAULT_EVENT_SETTINGS;
+    }
   }
 
   const store = getLocalStore();
