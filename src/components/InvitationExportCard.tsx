@@ -7,16 +7,21 @@ import { EventSettings } from "@/types";
 interface InvitationExportCardProps {
   guestName: string;
   settings: EventSettings;
+  resolvedMemoryPhotos?: string[];
+  resolvedGraduatePhoto?: string;
 }
 
 export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportCardProps>(
-  ({ guestName, settings }, ref) => {
+  ({ guestName, settings, resolvedMemoryPhotos, resolvedGraduatePhoto }, ref) => {
     const memoryPhotos =
-      settings.memory_photo_urls && settings.memory_photo_urls.length > 0
+      resolvedMemoryPhotos && resolvedMemoryPhotos.length > 0
+        ? resolvedMemoryPhotos
+        : settings.memory_photo_urls && settings.memory_photo_urls.length > 0
         ? settings.memory_photo_urls
         : [];
 
     const graduatePhoto =
+      resolvedGraduatePhoto ||
       settings.graduate_photo_url ||
       "https://res.cloudinary.com/dvucotc8z/image/upload/v1792392860/anh_h7bbjo.png";
 
@@ -38,12 +43,13 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
           {/* PHOTO 1: Top-Left (Col 1-6, Row 1-4) - Friends Selfie in Forest */}
           <div className="relative col-span-6 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
             {memoryPhotos[1] && (
-              <Image
+              <img
                 src={memoryPhotos[1]}
                 alt="Kỷ niệm 1"
-                fill
-                className="object-cover"
-                unoptimized
+                crossOrigin="anonymous"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-full object-cover"
               />
             )}
             <div className="absolute inset-0 bg-[#2D1B14]/10" />
@@ -52,12 +58,13 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
           {/* PHOTO 2: Top-Right (Col 7-12, Row 1-4) - Friends on Rock with Blue Sky */}
           <div className="relative col-span-6 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
             {memoryPhotos[2] && (
-              <Image
+              <img
                 src={memoryPhotos[2]}
                 alt="Kỷ niệm 2"
-                fill
-                className="object-cover"
-                unoptimized
+                crossOrigin="anonymous"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-full object-cover"
               />
             )}
             <div className="absolute inset-0 bg-[#2D1B14]/10" />
@@ -66,12 +73,13 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
           {/* PHOTO 0: Middle-Left (Col 1-5, Row 5-9) - 4 Friends in front of Building */}
           <div className="relative col-span-5 row-span-5 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
             {memoryPhotos[0] && (
-              <Image
+              <img
                 src={memoryPhotos[0]}
                 alt="Kỷ niệm 0"
-                fill
-                className="object-cover object-right"
-                unoptimized
+                crossOrigin="anonymous"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-full object-cover object-right"
               />
             )}
             <div className="absolute inset-0 bg-[#2D1B14]/10" />
@@ -80,12 +88,13 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
           {/* PHOTO 3: Middle-Right Top (Col 6-12, Row 5-8) - Stage Awards Ceremony */}
           <div className="relative col-span-7 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
             {memoryPhotos[3] && (
-              <Image
+              <img
                 src={memoryPhotos[3]}
                 alt="Kỷ niệm 3"
-                fill
-                className="object-cover"
-                unoptimized
+                crossOrigin="anonymous"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-full object-cover"
               />
             )}
             <div className="absolute inset-0 bg-[#2D1B14]/10" />
@@ -94,12 +103,13 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
           {/* PHOTO 4: Middle-Right Bottom Left (Col 6-8, Row 9-12) - Studio Pose */}
           <div className="relative col-span-3 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
             {memoryPhotos[4] && (
-              <Image
+              <img
                 src={memoryPhotos[4]}
                 alt="Kỷ niệm 4"
-                fill
-                className="object-cover"
-                unoptimized
+                crossOrigin="anonymous"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-full object-cover"
               />
             )}
             <div className="absolute inset-0 bg-[#2D1B14]/10" />
@@ -108,12 +118,13 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
           {/* PHOTO 5: Middle-Right Bottom Right (Col 9-12, Row 9-12) - Military Uniforms */}
           <div className="relative col-span-4 row-span-4 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
             {memoryPhotos[5] && (
-              <Image
+              <img
                 src={memoryPhotos[5]}
                 alt="Kỷ niệm 5"
-                fill
-                className="object-cover"
-                unoptimized
+                crossOrigin="anonymous"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-full object-cover"
               />
             )}
             <div className="absolute inset-0 bg-[#2D1B14]/10" />
@@ -122,12 +133,13 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
           {/* Bottom Left Placeholder behind cutout */}
           <div className="relative col-span-5 row-span-3 rounded-2xl overflow-hidden bg-[#DED1BF] border-2 border-white/80 shadow-sm">
             {memoryPhotos[0] && (
-              <Image
+              <img
                 src={memoryPhotos[0]}
                 alt="Kỷ niệm nền"
-                fill
-                className="object-cover"
-                unoptimized
+                crossOrigin="anonymous"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-full object-cover"
               />
             )}
             <div className="absolute inset-0 bg-[#2D1B14]/15" />
@@ -173,13 +185,14 @@ export const InvitationExportCard = forwardRef<HTMLDivElement, InvitationExportC
             LAYER 3: FOREGROUND CUTOUT OF HƯNG (Big, Sharp, Sticker)
             ======================================================== */}
         <div className="absolute left-[-20px] bottom-[140px] w-[620px] h-[1060px] pointer-events-none z-20 flex items-end justify-center">
-          <div className="relative w-full h-full">
-            <Image
+          <div className="relative w-full h-full flex items-end">
+            <img
               src={graduatePhoto}
               alt={settings.graduate_name}
-              fill
-              className="object-contain object-bottom sticker-cutout drop-shadow-2xl"
-              unoptimized
+              crossOrigin="anonymous"
+              loading="eager"
+              decoding="sync"
+              className="w-full h-full object-contain object-bottom sticker-cutout drop-shadow-2xl"
             />
           </div>
         </div>
