@@ -43,8 +43,21 @@ export function InvitationLetter({ guestName, settings }: InvitationLetterProps)
         </div>
 
         {/* Invitation Message Body */}
-        <div className="my-6 space-y-4 text-sm sm:text-base text-[#2D3748] font-sans leading-relaxed max-w-lg mx-auto whitespace-pre-line font-normal">
-          {settings.invitation_message}
+        <div className="my-6 space-y-3.5 text-sm sm:text-base text-[#2D3748] font-sans leading-relaxed max-w-lg mx-auto font-normal">
+          {(settings.invitation_message || "")
+            .replace(/\\r\\n/g, "\n")
+            .replace(/\\n/g, "\n")
+            .split(/\n\s*\n/)
+            .map((paragraph, pIdx) => (
+              <p key={pIdx} className="leading-relaxed">
+                {paragraph.split("\n").map((line, lIdx, arr) => (
+                  <React.Fragment key={lIdx}>
+                    {line}
+                    {lIdx < arr.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </p>
+            ))}
         </div>
 
         {/* Event Schedule Info Box */}

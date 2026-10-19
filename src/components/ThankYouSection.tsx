@@ -41,8 +41,21 @@ export function ThankYouSection({
           Cảm ơn bạn đã là một phần thanh xuân của Hưng
         </h2>
 
-        <div className="max-w-lg mx-auto text-sm sm:text-base text-[#4A5568] font-normal leading-relaxed whitespace-pre-line mb-6">
-          {settings.thank_you_message}
+        <div className="max-w-lg mx-auto text-sm sm:text-base text-[#4A5568] font-normal leading-relaxed mb-6 space-y-3">
+          {(settings.thank_you_message || "")
+            .replace(/\\r\\n/g, "\n")
+            .replace(/\\n/g, "\n")
+            .split(/\n\s*\n/)
+            .map((paragraph, pIdx) => (
+              <p key={pIdx} className="leading-relaxed">
+                {paragraph.split("\n").map((line, lIdx, arr) => (
+                  <React.Fragment key={lIdx}>
+                    {line}
+                    {lIdx < arr.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </p>
+            ))}
         </div>
 
         <div className="flex flex-col items-center mb-8">

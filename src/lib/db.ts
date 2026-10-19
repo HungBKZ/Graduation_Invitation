@@ -181,9 +181,19 @@ export async function getEventSettings(): Promise<EventSettings> {
 
 // Fill fields that older stored rows may not have yet
 function normalizeSettings(raw: Partial<EventSettings>): EventSettings {
+  const invitation_message = raw.invitation_message
+    ? raw.invitation_message.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n")
+    : DEFAULT_EVENT_SETTINGS.invitation_message;
+
+  const thank_you_message = raw.thank_you_message
+    ? raw.thank_you_message.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n")
+    : DEFAULT_EVENT_SETTINGS.thank_you_message;
+
   return {
     ...DEFAULT_EVENT_SETTINGS,
     ...raw,
+    invitation_message,
+    thank_you_message,
     memory_photo_urls: Array.isArray(raw.memory_photo_urls)
       ? raw.memory_photo_urls
       : DEFAULT_EVENT_SETTINGS.memory_photo_urls,

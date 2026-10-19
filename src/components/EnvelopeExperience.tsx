@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Sparkles, Heart } from "lucide-react";
+import { Sparkles, Heart, MousePointerClick } from "lucide-react";
+import confetti from "canvas-confetti";
 import { MonogramSeal } from "./MonogramSeal";
 import { recordEnvelopeOpenAction } from "@/app/actions";
 
@@ -27,6 +28,17 @@ export function EnvelopeExperience({
     if (isAnimating || stage !== "sealed") return;
     setIsAnimating(true);
     setStage("opening");
+
+    // Confetti celebratory burst
+    try {
+      confetti({
+        particleCount: 45,
+        spread: 65,
+        origin: { y: 0.55 },
+        colors: ["#9E1B32", "#C5A059", "#FAF5EE", "#EADBCE", "#7D1124"],
+        disableForReducedMotion: true,
+      });
+    } catch {}
 
     if (onStartAudio) {
       try {
@@ -94,8 +106,37 @@ export function EnvelopeExperience({
           </h2>
         </motion.div>
 
-        {/* Envelope Container */}
-        <div className="relative w-full max-w-[380px] sm:max-w-[440px] aspect-[4/3] flex items-center justify-center z-10">
+        {/* Interactive Envelope Container - Clickable */}
+        <motion.div
+          onClick={handleOpen}
+          whileHover={stage === "sealed" ? { scale: 1.025, y: -6 } : {}}
+          whileTap={stage === "sealed" ? { scale: 0.98 } : {}}
+          className={`relative w-full max-w-[380px] sm:max-w-[440px] aspect-[4/3] flex items-center justify-center z-10 select-none group transition-shadow ${
+            stage === "sealed" ? "cursor-pointer" : ""
+          }`}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") handleOpen();
+          }}
+          aria-label="Chạm để mở phong bì thư mời"
+        >
+          {/* Floating Lively Hint Badge */}
+          {stage === "sealed" && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: [0, -4, 0] }}
+              transition={{
+                opacity: { duration: 0.4 },
+                y: { repeat: Infinity, duration: 2.2, ease: "easeInOut" },
+              }}
+              className="absolute -top-10 z-40 px-3.5 py-1.5 rounded-full bg-[#FFFDF9] border border-[#C5A059]/40 text-[#9E1B32] shadow-[0_4px_16px_rgba(158,27,50,0.12)] flex items-center gap-1.5 text-xs font-semibold tracking-wide pointer-events-none"
+            >
+              <MousePointerClick className="w-3.5 h-3.5 text-[#C5A059] animate-bounce" />
+              <span>Chạm vào thư để mở nhé ✨</span>
+            </motion.div>
+          )}
+
           {/* Card that slides out */}
           <motion.div
             animate={
@@ -128,7 +169,7 @@ export function EnvelopeExperience({
           </motion.div>
 
           {/* Envelope Body */}
-          <div className="relative w-full h-full rounded-2xl bg-[#FFFDF9] border-2 border-[#EADBCE] shadow-[0_20px_50px_rgba(158,27,50,0.12)] overflow-hidden flex flex-col justify-end">
+          <div className="relative w-full h-full rounded-2xl bg-[#FFFDF9] border-2 border-[#EADBCE] shadow-[0_20px_50px_rgba(158,27,50,0.12)] group-hover:shadow-[0_25px_60px_rgba(158,27,50,0.2)] overflow-hidden flex flex-col justify-end transition-shadow duration-300">
             {/* Top Flap (Triangular Folding) */}
             <motion.div
               style={{ transformOrigin: "top center" }}
@@ -140,9 +181,12 @@ export function EnvelopeExperience({
               transition={{ duration: 0.6, ease: "easeInOut" }}
               className="absolute top-0 inset-x-0 h-[52%] bg-gradient-to-b from-[#FFFDF9] to-[#FAF5EE] border-b border-[#EADBCE] shadow-md [clip-path:polygon(0_0,100%_0,50%_100%)] flex items-start justify-center pt-2"
             >
-              {/* Wax Seal in Ruby Red on flap tip */}
+              {/* Wax Seal in Ruby Red on flap tip with pulsing ring */}
               <div className="relative -bottom-16 w-12 h-12 rounded-full bg-gradient-to-br from-[#C0394B] via-[#9E1B32] to-[#7D1124] p-0.5 shadow-lg flex items-center justify-center">
-                <div className="w-full h-full rounded-full bg-[#9E1B32] flex items-center justify-center border border-[#FAF5EE]/40">
+                {stage === "sealed" && (
+                  <span className="absolute inset-0 rounded-full bg-[#C5A059]/40 animate-ping opacity-75 pointer-events-none" />
+                )}
+                <div className="relative z-10 w-full h-full rounded-full bg-[#9E1B32] flex items-center justify-center border border-[#FAF5EE]/40 group-hover:scale-105 transition-transform">
                   <span className="font-serif text-xs font-bold text-[#FAF5EE]">
                     PTH
                   </span>
@@ -162,7 +206,7 @@ export function EnvelopeExperience({
               <span className="text-[11px] tracking-[0.25em] text-[#C5A059] uppercase font-sans font-bold">
                 Thư Mời Dành Cho
               </span>
-              <h1 className="font-handwriting text-3xl sm:text-4xl font-bold text-[#9E1B32] mt-1 tracking-wide">
+              <h1 className="font-handwriting text-3xl sm:text-4xl font-bold text-[#9E1B32] mt-1 tracking-wide group-hover:scale-105 transition-transform duration-300">
                 {guestName}
               </h1>
               <p className="text-xs text-[#718096] mt-1 italic font-serif">
@@ -170,7 +214,7 @@ export function EnvelopeExperience({
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Primary Open Button */}
         <motion.div
