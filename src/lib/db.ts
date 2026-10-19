@@ -225,36 +225,37 @@ export async function updateEventSettings(
 export async function getGuestByToken(token: string): Promise<Guest | null> {
   const supabase = getSupabaseServerClient();
   if (supabase) {
-    const { data: guestData, error: guestError } = await supabase
-      .from("guests")
-      .select("*, rsvp_responses(*)")
-      .eq("invitation_token", token)
-      .eq("is_active", true)
-      .single();
+    try {
+      const { data: guestData, error: guestError } = await supabase
+        .from("guests")
+        .select("*, rsvp_responses(*)")
+        .eq("invitation_token", token)
+        .eq("is_active", true)
+        .single();
 
-    if (guestError) {
-      if (guestError.code === "PGRST116") {
-        // Record not found
-        return null;
+      if (guestError) {
+        if (guestError.code === "PGRST116") {
+          // Record not found
+          return null;
+        }
+        console.warn("Supabase getGuestByToken error:", guestError.message);
+      } else if (guestData) {
+        const rsvp = Array.isArray(guestData.rsvp_responses)
+          ? guestData.rsvp_responses[0]
+          : guestData.rsvp_responses;
+        return {
+          id: guestData.id,
+          name: guestData.name,
+          invitation_token: guestData.invitation_token,
+          is_active: guestData.is_active,
+          created_at: guestData.created_at,
+          first_opened_at: guestData.first_opened_at,
+          rsvp: rsvp || null,
+        };
       }
-      throw new Error(`Lỗi truy vấn thư mời từ Supabase: ${guestError.message}`);
+    } catch (err) {
+      console.warn("Supabase getGuestByToken exception:", err);
     }
-
-    if (guestData) {
-      const rsvp = Array.isArray(guestData.rsvp_responses)
-        ? guestData.rsvp_responses[0]
-        : guestData.rsvp_responses;
-      return {
-        id: guestData.id,
-        name: guestData.name,
-        invitation_token: guestData.invitation_token,
-        is_active: guestData.is_active,
-        created_at: guestData.created_at,
-        first_opened_at: guestData.first_opened_at,
-        rsvp: rsvp || null,
-      };
-    }
-    return null;
   }
 
   const store = getLocalStore();
@@ -273,15 +274,15 @@ export async function markGuestOpened(token: string): Promise<void> {
   const now = new Date().toISOString();
   const supabase = getSupabaseServerClient();
   if (supabase) {
-    // Only update if first_opened_at is null
-    const { error } = await supabase
-      .from("guests")
-      .update({ first_opened_at: now })
-      .eq("invitation_token", token)
-      .is("first_opened_at", null);
-
-    if (error) {
-      console.error("Lỗi cập nhật thời điểm mở thư trên Supabase:", error.message);
+    try {
+      // Only update if first_opened_at is null
+      await supabase
+        .from("guests")
+        .update({ first_opened_at: now })
+        .eq("invitation_token", token)
+        .is("first_opened_at", null);
+    } catch (err) {
+      console.warn("Supabase markGuestOpened exception:", err);
     }
     return;
   }
@@ -342,27 +343,29 @@ export async function saveRsvp(
 export async function getAllGuests(): Promise<Guest[]> {
   const supabase = getSupabaseServerClient();
   if (supabase) {
-    const { data, error } = await supabase
-      .from("guests")
-      .select("*, rsvp_responses(*)")
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("guests")
+        .select("*, rsvp_responses(*)")
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      throw new Error(`Lỗi tải danh sách khách mời từ Supabase: ${error.message}`);
-    }
-
-    if (data) {
-      return (data as unknown as SupabaseGuestRow[]).map((item) => ({
-        id: item.id,
-        name: item.name,
-        invitation_token: item.invitation_token,
-        is_active: item.is_active,
-        created_at: item.created_at,
-        first_opened_at: item.first_opened_at,
-        rsvp: Array.isArray(item.rsvp_responses)
-          ? item.rsvp_responses[0] || null
-          : item.rsvp_responses || null,
-      }));
+      if (error) {
+        console.warn("Supabase getAllGuests error:", error.message);
+      } else if (data) {
+        return (data as unknown as SupabaseGuestRow[]).map((item) => ({
+          id: item.id,
+          name: item.name,
+          invitation_token: item.invitation_token,
+          is_active: item.is_active,
+          created_at: item.created_at,
+          first_opened_at: item.first_opened_at,
+          rsvp: Array.isArray(item.rsvp_responses)
+            ? item.rsvp_responses[0] || null
+            : item.rsvp_responses || null,
+        }));
+      }
+    } catch (err) {
+      console.warn("Supabase getAllGuests exception:", err);
     }
   }
 
