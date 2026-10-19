@@ -15,10 +15,14 @@ CREATE TABLE IF NOT EXISTS event_settings (
   maps_url TEXT,
   graduate_photo_url TEXT,
   background_music_url TEXT,
+  memory_photo_urls TEXT[] NOT NULL DEFAULT '{}',
   invitation_message TEXT NOT NULL,
   thank_you_message TEXT NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- For databases created before memory photos were added
+ALTER TABLE event_settings ADD COLUMN IF NOT EXISTS memory_photo_urls TEXT[] NOT NULL DEFAULT '{}';
 
 -- Seed default event settings
 INSERT INTO event_settings (
@@ -34,6 +38,7 @@ INSERT INTO event_settings (
   maps_url,
   graduate_photo_url,
   background_music_url,
+  memory_photo_urls,
   invitation_message,
   thank_you_message
 ) VALUES (
@@ -46,9 +51,17 @@ INSERT INTO event_settings (
   NULL,
   NULL,
   'Trường Đại học FPT Cần Thơ',
+  'https://maps.app.goo.gl/Ns55iZXUqcW4ZxET7',
+  'https://res.cloudinary.com/dvucotc8z/image/upload/v1792392860/anh_h7bbjo.png',
   NULL,
-  NULL,
-  NULL,
+  ARRAY[
+    'https://res.cloudinary.com/dvucotc8z/image/upload/v1792392407/1792392077668_1870005017028387390_8126173855356861704_e09fb4817c437826a6e8201237f824ad_eelie4.jpg',
+    'https://res.cloudinary.com/dvucotc8z/image/upload/v1792392407/1792392077628_1870005017028387390_8126173855356861704_de52956a7ddc26c86e10c5d20091da77_cqxqo2.jpg',
+    'https://res.cloudinary.com/dvucotc8z/image/upload/v1792392407/1792224923435_1870005017028387390_8126173855356861704_0ac081d21bfc9c2bab25daa8623606cb_e7eidz.jpg',
+    'https://res.cloudinary.com/dvucotc8z/image/upload/v1792392406/1792391676813_1870005017028387390_8126173855356861704_ed1d64783f72df4610213fa464b60a37_rgl7ni.jpg',
+    'https://res.cloudinary.com/dvucotc8z/image/upload/v1792392406/1792391724917_1870005017028387390_8126173855356861704_6db930a9d1d49c55735cbfe0859909a1_yvgkut.jpg',
+    'https://res.cloudinary.com/dvucotc8z/image/upload/v1792392406/1792391745750_1870005017028387390_8126173855356861704_9a4c2a617dd9341f8367441974563327_nbi3jp.jpg'
+  ],
   'Đến tham dự và chung vui cùng Hưng trong ngày lễ tốt nghiệp — một cột mốc đáng nhớ trên hành trình trưởng thành.\n\nSự hiện diện của bạn sẽ khiến ngày đặc biệt này trở nên ý nghĩa và trọn vẹn hơn bao giờ hết.',
   '"Every milestone becomes more meaningful when shared with the people who matter."\n\nCảm ơn bạn đã luôn là một phần quý giá trong hành trình thanh xuân và trưởng thành của Hưng.'
 ) ON CONFLICT (id) DO NOTHING;

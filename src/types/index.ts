@@ -32,6 +32,7 @@ export interface EventSettings {
   maps_url: string | null;
   graduate_photo_url: string | null;
   background_music_url: string | null;
+  memory_photo_urls: string[];
   invitation_message: string;
   thank_you_message: string;
   updated_at: string;

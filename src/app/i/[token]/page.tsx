@@ -47,28 +47,28 @@ export default async function GuestPage({ params }: GuestPageProps) {
   // Polished luxury error state if token is invalid or guest is inactive
   if (!guest || !guest.is_active) {
     return (
-      <div className="min-h-screen bg-[#0B1930] text-[#F6F1E8] flex flex-col items-center justify-center p-6 text-center select-none">
-        <div className="w-full max-w-md navy-card rounded-2xl p-8 sm:p-10 flex flex-col items-center gold-border-corner">
-          <MonogramSeal size={80} className="mb-6 drop-shadow-xl" />
+      <div className="min-h-screen bg-[#FAF6F0] text-[#1E2530] flex flex-col items-center justify-center p-6 text-center select-none">
+        <div className="w-full max-w-md bg-[#FFFDF9] rounded-3xl p-8 sm:p-10 flex flex-col items-center border border-[#EADBCE] shadow-[0_15px_45px_rgba(158,27,50,0.06)]">
+          <MonogramSeal size={80} className="mb-6 drop-shadow-md" />
 
-          <div className="w-12 h-12 rounded-full bg-red-950/60 border border-red-500/40 flex items-center justify-center text-red-400 mb-4">
+          <div className="w-12 h-12 rounded-full bg-[#FFF5F5] border border-[#FEB2B2] flex items-center justify-center text-[#C53030] mb-4">
             <AlertCircle className="w-6 h-6" />
           </div>
 
-          <h1 className="font-serif text-2xl font-bold text-[#F6F1E8] mb-2">
+          <h1 className="font-serif text-2xl font-bold text-[#7D1124] mb-2">
             Liên Kết Không Khả Dụng
           </h1>
 
-          <p className="text-sm text-[#9DAABD] font-sans leading-relaxed mb-6">
+          <p className="text-sm text-[#718096] font-sans leading-relaxed mb-6">
             Đường dẫn thư mời này không tồn tại, đã hết hạn hoặc đã được thu hồi.
             Vui lòng liên hệ trực tiếp với Phan Thành Hưng để nhận đường dẫn chính xác.
           </p>
 
-          <div className="pt-4 border-t border-[#D6B675]/20 w-full flex flex-col items-center">
-            <p className="text-xs text-[#9DAABD] uppercase tracking-widest font-sans">
+          <div className="pt-4 border-t border-[#EADBCE] w-full flex flex-col items-center">
+            <p className="text-xs text-[#718096] uppercase tracking-widest font-sans">
               The Graduation of Phan Thành Hưng
             </p>
-            <p className="text-xs text-[#D6B675] font-serif mt-1">
+            <p className="text-xs text-[#9E1B32] font-serif font-bold mt-1">
               FPT University Can Tho · 2026
             </p>
           </div>

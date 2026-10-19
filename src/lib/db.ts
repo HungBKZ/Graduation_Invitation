@@ -162,11 +162,22 @@ export async function getEventSettings(): Promise<EventSettings> {
       throw new Error(`Lỗi tải cài đặt sự kiện từ Supabase: ${error.message}`);
     }
 
-    if (data) return data as EventSettings;
+    if (data) return normalizeSettings(data as Partial<EventSettings>);
   }
 
   const store = getLocalStore();
-  return store.eventSettings;
+  return normalizeSettings(store.eventSettings);
+}
+
+// Fill fields that older stored rows may not have yet
+function normalizeSettings(raw: Partial<EventSettings>): EventSettings {
+  return {
+    ...DEFAULT_EVENT_SETTINGS,
+    ...raw,
+    memory_photo_urls: Array.isArray(raw.memory_photo_urls)
+      ? raw.memory_photo_urls
+      : DEFAULT_EVENT_SETTINGS.memory_photo_urls,
+  } as EventSettings;
 }
 
 export async function updateEventSettings(
@@ -189,7 +200,7 @@ export async function updateEventSettings(
       throw new Error(`Lỗi cập nhật cài đặt sự kiện trên Supabase: ${error.message}`);
     }
 
-    return data as EventSettings;
+    return normalizeSettings(data as Partial<EventSettings>);
   }
 
   const store = getLocalStore();
@@ -198,7 +209,7 @@ export async function updateEventSettings(
     ...updatedData,
   };
   saveLocalStore(store);
-  return store.eventSettings;
+  return normalizeSettings(store.eventSettings);
 }
 
 export async function getGuestByToken(token: string): Promise<Guest | null> {

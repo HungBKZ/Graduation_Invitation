@@ -20,6 +20,12 @@ export const updateGuestSchema = z.object({
   name: z.string().min(1, "Tên khách mời không được để trống").max(100),
 });
 
+// Accepts absolute http(s) URLs or site-relative paths like /uploads/photo.png
+const mediaUrl = (message: string) =>
+  z
+    .string()
+    .refine((v) => v.startsWith("/") || /^https?:\/\//i.test(v), message);
+
 export const eventSettingsSchema = z.object({
   graduate_name: z.string().min(1),
   major: z.string().min(1),
@@ -30,8 +36,12 @@ export const eventSettingsSchema = z.object({
   guest_meeting_time: z.string().nullable().optional(),
   location_name: z.string().min(1),
   maps_url: z.string().url("Đường dẫn Google Maps không hợp lệ").or(z.literal("")).nullable().optional(),
-  graduate_photo_url: z.string().url().or(z.literal("")).nullable().optional(),
-  background_music_url: z.string().url().or(z.literal("")).nullable().optional(),
+  graduate_photo_url: mediaUrl("Đường dẫn ảnh không hợp lệ").or(z.literal("")).nullable().optional(),
+  background_music_url: mediaUrl("Đường dẫn nhạc không hợp lệ").or(z.literal("")).nullable().optional(),
+  memory_photo_urls: z
+    .array(mediaUrl("Đường dẫn ảnh kỷ niệm không hợp lệ"))
+    .max(12, "Tối đa 12 ảnh kỷ niệm")
+    .optional(),
   invitation_message: z.string().min(1),
   thank_you_message: z.string().min(1),
 });
