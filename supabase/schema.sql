@@ -46,11 +46,11 @@ INSERT INTO event_settings (
   'Phan Thành Hưng',
   'Kỹ thuật phần mềm (Software Engineering)',
   'K18',
-  'Trường Đại học FPT Cần Thơ',
+  'Trường Đại học FPT Phân hiệu Cần Thơ',
   '2026-10-25',
-  NULL,
-  NULL,
-  'Trường Đại học FPT Cần Thơ',
+  '06:30',
+  '06:30 - 07:00',
+  'Sân vận động - Trường Đại học FPT Phân hiệu Cần Thơ (Số 600 Nguyễn Văn Cừ, P. An Bình, TP. Cần Thơ)',
   'https://maps.app.goo.gl/Ns55iZXUqcW4ZxET7',
   'https://res.cloudinary.com/dvucotc8z/image/upload/v1792392860/anh_h7bbjo.png',
   NULL,
@@ -63,8 +63,15 @@ INSERT INTO event_settings (
     'https://res.cloudinary.com/dvucotc8z/image/upload/v1792392406/1792391745750_1870005017028387390_8126173855356861704_9a4c2a617dd9341f8367441974563327_nbi3jp.jpg'
   ],
   'Đến tham dự và chung vui cùng Hưng trong ngày lễ tốt nghiệp — một cột mốc đáng nhớ trên hành trình trưởng thành.\n\nSự hiện diện của bạn sẽ khiến ngày đặc biệt này trở nên ý nghĩa và trọn vẹn hơn bao giờ hết.',
-  '"Every milestone becomes more meaningful when shared with the people who matter."\n\nCảm ơn bạn đã luôn là một phần quý giá trong hành trình thanh xuân và trưởng thành của Hưng.'
-) ON CONFLICT (id) DO NOTHING;
+  'Mỗi cột mốc đều ý nghĩa hơn khi được chia sẻ cùng những người mình thương.\n\nCảm ơn bạn đã luôn là một phần tuyệt vời trong hành trình thanh xuân của Hưng.'
+) ON CONFLICT (id) DO UPDATE SET
+  event_start_time = EXCLUDED.event_start_time,
+  guest_meeting_time = EXCLUDED.guest_meeting_time,
+  location_name = EXCLUDED.location_name,
+  maps_url = EXCLUDED.maps_url,
+  graduate_photo_url = EXCLUDED.graduate_photo_url,
+  memory_photo_urls = EXCLUDED.memory_photo_urls,
+  thank_you_message = EXCLUDED.thank_you_message;
 
 -- 2. Create guests table
 CREATE TABLE IF NOT EXISTS guests (
