@@ -60,7 +60,7 @@ export function GiaYenDownloadModal({
         "https://res.cloudinary.com/dvucotc8z/image/upload/v1792589960/DainXinkDep_imj1fp.jpg";
 
       const [convertedMemories, convertedGrad] = await Promise.all([
-        Promise.all(memoryUrls.slice(0, 4).map((u) => fetchImageAsBase64(u))),
+        Promise.all(memoryUrls.slice(0, 8).map((u) => fetchImageAsBase64(u))),
         fetchImageAsBase64(graduateUrl),
       ]);
 
