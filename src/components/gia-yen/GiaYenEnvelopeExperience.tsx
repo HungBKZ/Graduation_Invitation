@@ -28,29 +28,29 @@ export function GiaYenEnvelopeExperience({
     // Audio cue callback
     onStartAudio();
 
-    // Trigger burgundy rose & champagne gold confetti
+    // Trigger burgundy rose petals & champagne gold confetti
     try {
-      const colors = ["#540F1B", "#7D1A2A", "#D1BBA2", "#FAF5EE", "#C25E6E"];
+      const colors = ["#580B17", "#7D1A2A", "#D1BBA2", "#FFFDF9", "#C25E6E", "#E5C378"];
       confetti({
-        particleCount: 50,
-        spread: 70,
+        particleCount: 75,
+        spread: 85,
         origin: { y: 0.6 },
         colors,
       });
 
       setTimeout(() => {
         confetti({
-          particleCount: 40,
+          particleCount: 50,
           angle: 60,
-          spread: 60,
-          origin: { x: 0.2, y: 0.7 },
+          spread: 65,
+          origin: { x: 0.2, y: 0.65 },
           colors,
         });
         confetti({
-          particleCount: 40,
+          particleCount: 50,
           angle: 120,
-          spread: 60,
-          origin: { x: 0.8, y: 0.7 },
+          spread: 65,
+          origin: { x: 0.8, y: 0.65 },
           colors,
         });
       }, 250);
@@ -71,155 +71,382 @@ export function GiaYenEnvelopeExperience({
       setTimeout(() => {
         onOpenComplete();
       }, 700);
-    }, 900);
+    }, 1000);
   };
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-700 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-700 select-none ${
         isOpen
           ? "opacity-0 pointer-events-none scale-105"
-          : "opacity-100 backdrop-blur-md bg-[#24050B]/85"
+          : "opacity-100 backdrop-blur-2xl bg-[#140205]/92"
       }`}
+      style={{
+        backgroundImage: `
+          radial-gradient(circle at 50% 32%, rgba(105, 17, 31, 0.55) 0%, rgba(20, 2, 5, 0.96) 72%),
+          radial-gradient(circle at 10% 90%, rgba(209, 187, 162, 0.1) 0%, transparent 45%),
+          radial-gradient(circle at 90% 10%, rgba(138, 22, 40, 0.18) 0%, transparent 45%)
+        `,
+      }}
     >
-      {/* Background ambient glow */}
+      {/* Ambient floating golden dust & romantic glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#7D1A2A]/20 blur-3xl animate-pulse" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-[#D1BBA2]/15 blur-3xl" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] h-[650px] rounded-full bg-[#7D1A2A]/20 blur-[130px] pointer-events-none animate-pulse" />
+        <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-[#D1BBA2]/10 blur-[100px] pointer-events-none" />
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-[#580B17]/30 blur-[100px] pointer-events-none" />
       </div>
 
-      <div className="relative w-full max-w-md sm:max-w-lg flex flex-col items-center">
-        {/* Subtle romantic label above envelope */}
-        <div className="mb-4 text-center">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-serif uppercase tracking-[0.25em] text-[#D1BBA2] bg-[#3B0A13]/80 border border-[#D1BBA2]/30 shadow-sm">
-            <Sparkles className="w-3 h-3 text-[#D1BBA2]" />
-            A Special Invitation From Én
-          </span>
-          <h2 className="mt-2 text-2xl sm:text-3xl font-serif italic text-[#FAF5EE] tracking-wide drop-shadow-sm">
-            Thư Mời Tốt Nghiệp
+      <div className="relative w-full max-w-[540px] flex flex-col items-center">
+        
+        {/* ========================================================
+            HEADER: ROYAL FRENCH MONOGRAM & SALUTATION
+            ======================================================== */}
+        <div className="mb-6 sm:mb-8 text-center flex flex-col items-center">
+          
+          {/* Royal Filigree Header Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#35050C]/90 border border-[#D1BBA2]/40 text-[#D1BBA2] shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md">
+            <span className="text-[10px] text-[#E5C378]">✦</span>
+            <span className="text-[11px] font-serif uppercase tracking-[0.3em] font-medium">
+              Đại Học Cần Thơ • Khóa 48
+            </span>
+            <span className="text-[10px] text-[#E5C378]">✦</span>
+          </div>
+
+          {/* Main Title with Gold Shimmer */}
+          <h2 className="mt-3 text-3xl sm:text-4xl lg:text-[44px] font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#FAF5EE] via-[#FFFDF9] to-[#E5C378] tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
+            Thư Mời Lễ Tốt Nghiệp
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-[#FAF5EE]/80 font-light">
-            Trân trọng gửi đến <span className="font-semibold text-[#D1BBA2]">{guestName}</span>
-          </p>
+
+          {/* Personal Salutation Box */}
+          <div className="mt-2 flex items-center gap-2 text-xs sm:text-sm font-serif">
+            <span className="text-[#D1BBA2]/90 italic">Trân trọng kính gửi đến:</span>
+            <span className="font-bold text-[#FAF5EE] border-b border-[#E5C378]/60 pb-0.5 tracking-wider drop-shadow-sm">
+              {guestName}
+            </span>
+          </div>
         </div>
 
-        {/* The Burgundy Envelope Body */}
+        {/* ========================================================
+            THE HAUTE COUTURE BURGUNDY VELVET ENVELOPE
+            ======================================================== */}
         <div
           onClick={handleOpenEnvelope}
-          className={`group relative w-full aspect-[4/3] max-w-[420px] rounded-2xl cursor-pointer select-none transition-transform duration-500 hover:scale-[1.02] shadow-[0_25px_60px_-15px_rgba(36,5,11,0.9),0_0_0_1px_rgba(209,187,162,0.25)] ${
+          className={`group relative w-full aspect-[1.5/1] max-w-[480px] sm:max-w-[510px] rounded-2xl cursor-pointer select-none transition-all duration-500 hover:scale-[1.02] shadow-[0_35px_80px_-15px_rgba(10,1,3,0.98),0_0_0_1px_rgba(209,187,162,0.4),0_15px_30px_rgba(0,0,0,0.7)] ${
             isOpening ? "scale-[1.02]" : ""
           }`}
-          style={{ perspective: "1200px" }}
+          style={{ perspective: "1500px" }}
         >
-          {/* Envelope Pocket Base */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-[#6B1724] to-[#420A14] overflow-hidden border border-[#D1BBA2]/30">
-            {/* Fine grain noise and linen texture simulation */}
+          {/* ENVELOPE BASE / BACK WALL (Rich Velvet) */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-[#4A0A14] via-[#3A060E] to-[#250308] overflow-hidden border border-[#D1BBA2]/40 shadow-inner">
+            
+            {/* Fine French Linen texture simulation */}
             <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#D1BBA2_1px,transparent_1px)] [background-size:12px_12px]" />
 
-            {/* Inner envelope lining (Cream stationery peek) */}
+            {/* Gold foil perimeter filigree line with corner stars */}
+            <div className="absolute inset-2 sm:inset-2.5 rounded-xl border border-[#D1BBA2]/30 pointer-events-none">
+              <span className="absolute top-1 left-1 text-[9px] text-[#E5C378]/70">✦</span>
+              <span className="absolute top-1 right-1 text-[9px] text-[#E5C378]/70">✦</span>
+              <span className="absolute bottom-1 left-1 text-[9px] text-[#E5C378]/70">✦</span>
+              <span className="absolute bottom-1 right-1 text-[9px] text-[#E5C378]/70">✦</span>
+            </div>
+
+            {/* ========================================================
+                INNER COTTON PAPER INVITATION CARD (Sliding Reveal)
+                ======================================================== */}
             <div
-              className={`absolute left-4 right-4 top-4 bottom-4 rounded-xl bg-[#FAF5EE] p-5 shadow-inner transition-transform duration-700 ease-out flex flex-col justify-between ${
-                isOpening ? "-translate-y-24" : "translate-y-0"
+              className={`absolute left-6 right-6 top-6 bottom-6 rounded-xl bg-[#FFFDF9] shadow-[0_12px_35px_rgba(0,0,0,0.45)] transition-transform duration-700 ease-out flex flex-col justify-between p-5 sm:p-6 border border-[#D1BBA2] z-10 ${
+                isOpening ? "-translate-y-28 sm:-translate-y-36" : "translate-y-0"
               }`}
             >
-              <div className="border border-[#D1BBA2]/40 rounded-lg h-full p-4 flex flex-col items-center justify-center text-center">
-                <span className="text-[11px] uppercase tracking-[0.3em] text-[#7D1A2A] font-semibold">
+              {/* Inner Gold Gilded Double Border */}
+              <div className="border border-[#D1BBA2]/60 rounded-lg h-full p-4 flex flex-col items-center justify-center text-center relative bg-gradient-to-b from-[#FFFDF9] to-[#FAF5EE]">
+                <div className="absolute inset-1 rounded border border-[#D1BBA2]/30 pointer-events-none" />
+
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-[#7D1A2A] font-serif font-bold">
                   Trường Đại Học Cần Thơ
                 </span>
-                <h3 className="text-xl sm:text-2xl font-serif text-[#3B0A13] mt-1 font-bold">
+
+                <div className="w-8 h-px bg-[#D1BBA2] my-1.5" />
+
+                <h3 className="text-2xl sm:text-3xl font-serif text-[#3B0A13] font-bold tracking-tight">
                   Lê Gia Yến
                 </h3>
-                <p className="text-xs text-[#540F1B]/80 italic mt-0.5 font-serif">
-                  Tài chính - Ngân hàng
+
+                <p className="text-xs sm:text-sm text-[#7D1A2A] italic font-serif mt-0.5">
+                  Tân Cử Nhân • Tài chính - Ngân hàng
                 </p>
-                <div className="w-12 h-px bg-[#D1BBA2] my-2" />
-                <p className="text-[11px] text-[#420A14]/70">
-                  02 Tháng 11 Năm 2026 • 11:00 AM
+
+                <div className="mt-3 px-3 py-1 rounded-full bg-[#580B17]/10 border border-[#580B17]/20 text-[11px] text-[#580B17] font-serif font-semibold">
+                  11:00 AM • Thứ Hai, 02.11.2026
+                </div>
+
+                <p className="text-[10px] text-[#3B0A13]/70 font-serif mt-1.5">
+                  Hội trường Rùa • Khu II Đại học Cần Thơ
                 </p>
               </div>
             </div>
 
-            {/* Envelope pocket fold diagonals */}
-            <div className="absolute inset-0 pointer-events-none">
-              {/* Bottom fold triangle */}
-              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#3B0A13] to-[#540F1B] [clip-path:polygon(0_100%,50%_25%,100%_100%)] opacity-95 border-t border-[#D1BBA2]/20" />
-              {/* Left fold triangle */}
-              <div className="absolute top-0 bottom-0 left-0 w-1/2 bg-gradient-to-r from-[#4A0D17] to-[#540F1B] [clip-path:polygon(0_0,100%_50%,0_100%)] opacity-90" />
-              {/* Right fold triangle */}
-              <div className="absolute top-0 bottom-0 right-0 w-1/2 bg-gradient-to-l from-[#4A0D17] to-[#540F1B] [clip-path:polygon(100%_0,0_50%,100%_100%)] opacity-90" />
+            {/* ========================================================
+                ENVELOPE FOLDED POCKET (Left, Right, Bottom Panels)
+                Completely seamless velvet — ZERO exposed gaps!
+                ======================================================== */}
+            <div className="absolute inset-0 pointer-events-none z-20">
+              
+              {/* Left Side Flap */}
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-[#4E0C15] to-[#3B060E]"
+                style={{
+                  clipPath: "polygon(0 0, 52% 50%, 0 100%)",
+                }}
+              >
+                <div className="w-full h-full border-r border-[#E5C378]/20" />
+              </div>
+
+              {/* Right Side Flap */}
+              <div
+                className="absolute inset-0 bg-gradient-to-l from-[#4E0C15] to-[#3B060E]"
+                style={{
+                  clipPath: "polygon(100% 0, 48% 50%, 100% 100%)",
+                }}
+              >
+                <div className="w-full h-full border-l border-[#E5C378]/20" />
+              </div>
+
+              {/* Bottom Triangular Flap (Overlaps Left & Right) */}
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-[#2E040B] via-[#450912] to-[#540B16] shadow-[0_-5px_15px_rgba(0,0,0,0.3)]"
+                style={{
+                  clipPath: "polygon(0 100%, 50% 44%, 100% 100%)",
+                }}
+              >
+                {/* Gold Piping along the bottom flap edge */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    clipPath: "polygon(0 100%, 50% 44%, 100% 100%, 100% 98.5%, 50% 45.5%, 0 98.5%)",
+                    backgroundColor: "#E5C378",
+                    opacity: 0.5,
+                  }}
+                />
+
+                {/* Subtle Monogram Hot-Stamp on Bottom */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-3 text-[10px] font-serif uppercase tracking-[0.25em] text-[#D1BBA2]/50">
+                  <span>✦</span>
+                  <span>LGY • CAN THO UNIVERSITY</span>
+                  <span>✦</span>
+                </div>
+              </div>
+
+              {/* ========================================================
+                  BURGUNDY SILK CHIFFON RIBBON (Horizontal Band)
+                  ======================================================== */}
+              <div className="absolute top-[50%] -translate-y-1/2 left-0 right-0 h-10 bg-gradient-to-r from-[#200307] via-[#520C17] to-[#200307] shadow-[0_4px_14px_rgba(0,0,0,0.6)] border-y border-[#D1BBA2]/30 flex items-center justify-between px-6 z-25">
+                <div className="w-full h-px border-b border-dashed border-[#E5C378]/40" />
+              </div>
+
+              {/* Silk Ribbon Tails draping downward */}
+              <div className="absolute top-[50%] left-1/2 -translate-x-1/2 z-26 pointer-events-none">
+                {/* Left Ribbon Tail */}
+                <div
+                  className="absolute -left-6 top-3 w-5 h-20 bg-gradient-to-b from-[#520C17] to-[#200307] shadow-xl rounded-b-sm border-x border-[#D1BBA2]/25"
+                  style={{
+                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
+                    transform: "rotate(-12deg)",
+                  }}
+                />
+                {/* Right Ribbon Tail */}
+                <div
+                  className="absolute left-1 top-3 w-5 h-22 bg-gradient-to-b from-[#520C17] to-[#200307] shadow-xl rounded-b-sm border-x border-[#D1BBA2]/25"
+                  style={{
+                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
+                    transform: "rotate(10deg)",
+                  }}
+                />
+              </div>
+
             </div>
           </div>
 
-          {/* Envelope Top Flap with 3D Rotate */}
+          {/* ========================================================
+              TOP ENVELOPE TRIANGLE FLAP (3D ROTATION)
+              Overlaps downward seamlessly to 56% depth
+              ======================================================== */}
           <div
-            className={`absolute top-0 left-0 right-0 h-1/2 origin-top transition-transform duration-700 ease-in-out z-20 pointer-events-none ${
+            className={`absolute top-0 left-0 right-0 h-full origin-top transition-transform duration-700 ease-in-out z-30 pointer-events-none ${
               isOpening
-                ? "[transform:rotateX(-145deg)]"
+                ? "[transform:rotateX(-165deg)]"
                 : "[transform:rotateX(0deg)]"
             }`}
             style={{ transformStyle: "preserve-3d" }}
           >
             {/* The Top Triangle Flap */}
-            <div className="w-full h-full bg-gradient-to-b from-[#7A1929] to-[#540F1B] [clip-path:polygon(0_0,100%_0,50%_100%)] shadow-md border-t border-[#D1BBA2]/40 relative">
-              {/* Flap edge scalloped lace accent */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-2 bg-[#FAF5EE]/20 blur-[0.5px] rounded-full" />
+            <div
+              className="w-full h-full bg-gradient-to-b from-[#6A0E1C] via-[#540B16] to-[#3E060F] shadow-[0_16px_35px_rgba(0,0,0,0.7)] relative"
+              style={{
+                clipPath: "polygon(0 0, 100% 0, 50% 56%)",
+              }}
+            >
+              {/* Fine gold foil border along flap triangle */}
+              <div
+                className="absolute inset-0 bg-[#E5C378]"
+                style={{
+                  clipPath: "polygon(0 0, 100% 0, 50% 56%, 50% 54.5%, 98.5% 1%, 1.5% 1%)",
+                  opacity: 0.8,
+                }}
+              />
+
+              {/* Romantic French Scalloped Lace Trim along flap edge */}
+              <svg
+                className="absolute top-0 left-0 w-full h-[58%] text-[#FAF5EE]/50 drop-shadow-sm"
+                viewBox="0 0 500 280"
+                preserveAspectRatio="none"
+              >
+                {/* Left diagonal lace scalloped edge */}
+                <path
+                  d="M0,0 L250,280 L500,0"
+                  fill="none"
+                  stroke="#E5C378"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 3"
+                  opacity="0.85"
+                />
+              </svg>
             </div>
           </div>
 
-          {/* Oval Ivory Wax Seal with Calla Lily & "LGY" */}
+          {/* ========================================================
+              BOTANICAL SPRIG (White Calla Lily & Gold Leaves)
+              ======================================================== */}
           <div
-            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-all duration-500 ${
+            className={`absolute left-[44%] top-[50%] -translate-x-1/2 -translate-y-1/2 z-35 pointer-events-none transition-all duration-500 ${
+              isOpening ? "opacity-0 -translate-y-12" : "opacity-100"
+            }`}
+          >
+            <svg
+              className="w-16 h-24 sm:w-20 sm:h-28 text-[#FFFDF9] drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] -rotate-[28deg]"
+              viewBox="0 0 100 140"
+              fill="none"
+            >
+              <path
+                d="M50 40 Q45 80 40 130"
+                stroke="#4A5D43"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+              <path
+                d="M45 85 Q30 75 25 65 Q35 70 45 80"
+                fill="#C5A059"
+                opacity="0.9"
+              />
+              <path
+                d="M42 105 Q55 95 60 85 Q50 92 42 100"
+                fill="#C5A059"
+                opacity="0.9"
+              />
+              <path
+                d="M50 15 C35 25 35 45 50 55 C65 45 65 25 50 15 Z"
+                fill="#FFFDF9"
+                stroke="#EADBCE"
+                strokeWidth="1.5"
+              />
+              <path
+                d="M50 20 C42 26 42 38 50 48"
+                stroke="#E5C378"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+
+          {/* ========================================================
+              3D SCULPTED IVORY & GOLD FOIL ROYAL WAX SEAL
+              ======================================================== */}
+          <div
+            className={`absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 z-40 transition-all duration-500 ${
               isOpening
                 ? "opacity-0 scale-75 -translate-y-16"
                 : "opacity-100 scale-100 group-hover:scale-105"
             }`}
           >
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
-              {/* Wax Seal Body */}
-              <div className="w-20 h-24 sm:w-24 sm:h-28 rounded-[50%] bg-gradient-to-br from-[#FFFDF9] via-[#FAF5EE] to-[#E8DFD5] shadow-[0_8px_20px_rgba(0,0,0,0.4),inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(180,160,140,0.5)] border-2 border-[#D1BBA2]/70 flex flex-col items-center justify-center relative p-2">
-                {/* Outer delicate ring */}
-                <div className="absolute inset-1.5 rounded-[50%] border border-[#D1BBA2]/60" />
-                
-                {/* Calla Lily SVG motif */}
-                <svg
-                  className="w-7 h-7 sm:w-8 sm:h-8 text-[#7D1A2A] mb-0.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2C8 2 7 6 7 9c0 4 5 11 5 13s5-9 5-13c0-3-1-7-5-7z" fill="#FAF5EE" />
-                  <path d="M12 6c-1 2-1 4 0 6" stroke="#C25E6E" />
-                  <path d="M12 22c-2-3-5-6-5-10" />
-                </svg>
+            <div className="relative w-28 h-32 sm:w-32 sm:h-36 flex items-center justify-center">
+              
+              {/* Realistic hot-wax melted droplet layers */}
+              <div
+                className="w-24 h-28 sm:w-28 sm:h-32 rounded-[52%_48%_55%_45%_/_48%_53%_47%_52%] p-2 relative flex flex-col items-center justify-center border-2 border-[#E5C378]"
+                style={{
+                  background: "radial-gradient(circle at 35% 30%, #FFFFFF 0%, #FAF5EE 45%, #EADBCE 85%, #CBB79F 100%)",
+                  boxShadow: `
+                    0 18px 40px rgba(15, 1, 4, 0.8),
+                    0 6px 14px rgba(0, 0, 0, 0.5),
+                    inset 0 3px 6px rgba(255, 255, 255, 0.98),
+                    inset 0 -4px 8px rgba(138, 110, 85, 0.5)
+                  `,
+                }}
+              >
+                {/* Outer Delicate Gold Beaded Rings */}
+                <div className="absolute inset-2 sm:inset-2.5 rounded-[50%] border border-dashed border-[#C5A059] opacity-85" />
+                <div className="absolute inset-3 sm:inset-3.5 rounded-[50%] border border-[#E5C378]/70" />
 
-                {/* Monogram Initials */}
-                <span className="text-xs sm:text-sm font-serif font-bold text-[#540F1B] tracking-widest mt-[-2px]">
-                  LGY
-                </span>
-                <span className="text-[9px] font-serif uppercase tracking-[0.2em] text-[#8C2434] opacity-80">
-                  CTU • 2026
-                </span>
+                {/* Debossed Calla Lily & Monogram */}
+                <div className="relative z-10 flex flex-col items-center justify-center">
+                  <svg
+                    className="w-7 h-7 sm:w-8 sm:h-8 text-[#580B17] mb-0.5 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path
+                      d="M12 2C8 2 7 6 7 9c0 4 5 11 5 13s5-9 5-13c0-3-1-7-5-7z"
+                      fill="#FFFDF9"
+                    />
+                    <path d="M12 5c-1 2-1 4 0 7" stroke="#C5A059" strokeWidth="1.8" />
+                    <path d="M12 22c-2-3-5-6-5-10" />
+                  </svg>
+
+                  {/* Royal Calligraphy Monogram */}
+                  <span
+                    className="text-base sm:text-lg font-serif font-black tracking-[0.18em] text-[#580B17] mt-[-3px]"
+                    style={{
+                      textShadow: "0 1px 0 rgba(255,255,255,0.9), 0 -1px 0 rgba(0,0,0,0.15)",
+                    }}
+                  >
+                    LGY
+                  </span>
+
+                  {/* Subtext CTU */}
+                  <span className="text-[8px] sm:text-[9px] font-serif uppercase tracking-[0.25em] text-[#7D1A2A] font-bold mt-[-1px]">
+                    CTU • 2026
+                  </span>
+                </div>
+
+                {/* Pearlescent highlight reflection */}
+                <div className="absolute top-2 left-3 w-6 h-3 rounded-full bg-white/70 blur-[1px] -rotate-45 pointer-events-none" />
               </div>
 
-              {/* Pulsing subtle hint ring */}
-              <div className="absolute -inset-1 rounded-full border border-[#D1BBA2]/40 animate-ping pointer-events-none opacity-40" />
+              {/* Pulsing subtle gold hint ring */}
+              <div className="absolute -inset-1.5 rounded-full border border-[#E5C378]/60 animate-ping pointer-events-none opacity-40" />
             </div>
           </div>
 
-          {/* Interactive Tap Prompt Badge at the bottom */}
-          <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 whitespace-nowrap z-30">
+          {/* ========================================================
+              ACTION PROMPT BUTTON (Gilded Velvet Pill)
+              ======================================================== */}
+          <div className="absolute -bottom-16 sm:-bottom-18 left-1/2 -translate-x-1/2 whitespace-nowrap z-40">
             <button
               type="button"
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#6B1724] to-[#420A14] text-[#FAF5EE] text-xs sm:text-sm font-serif tracking-wider shadow-lg border border-[#D1BBA2]/40 group-hover:border-[#D1BBA2] transition-colors"
+              className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-[#6A0E1C] via-[#540B16] to-[#35050C] text-[#FAF5EE] text-xs sm:text-sm font-serif font-semibold tracking-wider shadow-[0_10px_30px_rgba(0,0,0,0.6)] border border-[#E5C378]/70 hover:border-[#E5C378] group-hover:scale-105 transition-all cursor-pointer"
             >
-              <Heart className="w-3.5 h-3.5 text-[#E8DFD5] fill-[#E8DFD5]/40 animate-pulse" />
+              <Sparkles className="w-4 h-4 text-[#E5C378] animate-pulse" />
               <span>Chạm vào để mở thư mời</span>
+              <Heart className="w-3.5 h-3.5 text-[#E5C378] fill-[#E5C378]/40" />
             </button>
           </div>
+
         </div>
+
       </div>
     </div>
   );
