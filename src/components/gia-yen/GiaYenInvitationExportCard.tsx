@@ -193,115 +193,31 @@ export const GiaYenInvitationExportCard = forwardRef<
       </div>
 
       {/* ========================================================
-          LAYER 3: CENTERPIECE COMPOSITION (Arch Frame + 4 Satellite Polaroids = 5 PHOTOS)
+          LAYER 3: GRAND ROYAL PORTRAIT CENTERPIECE (Solo Showstopper)
           ======================================================== */}
-      <div className="relative z-20 flex items-center justify-center my-1 w-full min-h-[760px]">
+      <div className="relative z-20 flex items-center justify-center my-2 w-full">
         
-        {/* SATELLITE POLAROID 1 (Top-Left - e.g. Trúng tuyển) */}
-        {(memoryPhotos[0] || memoryPhotos[7]) && (
-          <div className="absolute -left-3 top-2 w-[310px] p-3.5 pb-7 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] -rotate-10 border-2 border-[#D1BBA2] z-10">
-            {/* Washi Tape Strip */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#E5C378]/80 rotate-[-3deg] rounded-sm shadow-md border-x-2 border-white" />
+        {/* Ambient Golden Radiance Halo behind the portrait */}
+        <div
+          className="absolute w-[800px] h-[950px] rounded-full pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse at center, rgba(229, 195, 120, 0.35) 0%, rgba(125, 26, 42, 0.28) 45%, transparent 72%)",
+            filter: "blur(40px)",
+          }}
+        />
 
-            <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
-              <img
-                src={memoryPhotos[0] || memoryPhotos[7]}
-                alt="Memory Polaroid 1"
-                crossOrigin="anonymous"
-                loading="eager"
-                decoding="sync"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="mt-2.5 flex items-center justify-between px-1">
-              <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
-                {getMilestoneTitle(memoryPhotos[0] || memoryPhotos[7], "Trúng tuyển")}
-              </p>
-              <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
-            </div>
-          </div>
-        )}
+        {/* Orbiting Celestial Stars */}
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[#E5C378] text-3xl animate-pulse">✦</div>
+        <div className="absolute top-24 -left-4 text-[#E5C378]/75 text-2xl">✦</div>
+        <div className="absolute top-24 -right-4 text-[#E5C378]/75 text-2xl">✦</div>
+        <div className="absolute bottom-28 -left-6 text-[#E5C378]/60 text-xl">✦</div>
+        <div className="absolute bottom-28 -right-6 text-[#E5C378]/60 text-xl">✦</div>
 
-        {/* SATELLITE POLAROID 2 (Top-Right - e.g. Bài nhóm đầu tiên) */}
-        {(memoryPhotos[1] || memoryPhotos[3]) && (
-          <div className="absolute -right-3 top-6 w-[310px] p-3.5 pb-7 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] rotate-9 border-2 border-[#D1BBA2] z-10">
-            {/* Washi Tape Strip */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#E5C378]/80 rotate-[4deg] rounded-sm shadow-md border-x-2 border-white" />
-
-            <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
-              <img
-                src={memoryPhotos[1] || memoryPhotos[3]}
-                alt="Memory Polaroid 2"
-                crossOrigin="anonymous"
-                loading="eager"
-                decoding="sync"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="mt-2.5 flex items-center justify-between px-1">
-              <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
-                {getMilestoneTitle(memoryPhotos[1] || memoryPhotos[3], "Bài nhóm đầu tiên")}
-              </p>
-              <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
-            </div>
-          </div>
-        )}
-
-        {/* SATELLITE POLAROID 3 (Bottom-Left - e.g. Mùa hè xanh / NCKH) */}
-        {(memoryPhotos[7] || memoryPhotos[5] || memoryPhotos[2]) && (
-          <div className="absolute -left-3 top-[370px] w-[310px] p-3.5 pb-7 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] rotate-8 border-2 border-[#D1BBA2] z-15">
-            {/* Washi Tape Strip */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#D1BBA2]/85 rotate-[2deg] rounded-sm shadow-md border-x-2 border-white" />
-
-            <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
-              <img
-                src={memoryPhotos[7] || memoryPhotos[5] || memoryPhotos[2]}
-                alt="Memory Polaroid 3"
-                crossOrigin="anonymous"
-                loading="eager"
-                decoding="sync"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="mt-2.5 flex items-center justify-between px-1">
-              <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
-                {getMilestoneTitle(memoryPhotos[7] || memoryPhotos[5] || memoryPhotos[2], "Mùa hè xanh")}
-              </p>
-              <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
-            </div>
-          </div>
-        )}
-
-        {/* SATELLITE POLAROID 4 (Bottom-Right - e.g. Hoàn thành Khóa luận) */}
-        {(memoryPhotos[10] || memoryPhotos[11] || memoryPhotos[4]) && (
-          <div className="absolute -right-3 top-[390px] w-[310px] p-3.5 pb-7 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] -rotate-9 border-2 border-[#D1BBA2] z-15">
-            {/* Washi Tape Strip */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#D1BBA2]/85 rotate-[-3deg] rounded-sm shadow-md border-x-2 border-white" />
-
-            <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
-              <img
-                src={memoryPhotos[10] || memoryPhotos[11] || memoryPhotos[4]}
-                alt="Memory Polaroid 4"
-                crossOrigin="anonymous"
-                loading="eager"
-                decoding="sync"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="mt-2.5 flex items-center justify-between px-1">
-              <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
-                {getMilestoneTitle(memoryPhotos[10] || memoryPhotos[11] || memoryPhotos[4], "Hoàn thành Khóa luận")}
-              </p>
-              <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
-            </div>
-          </div>
-        )}
-
-        {/* MAIN BAROQUE ARCH FRAME (Gia Yến's High-Res Portrait - CENTERPIECE) */}
-        <div className="relative w-[520px] p-4.5 rounded-[50px] bg-[#FAF5EE] border-4 border-[#E5C378] shadow-[0_30px_70px_rgba(0,0,0,0.85)] z-20">
+        {/* MAIN CATHEDRAL BAROQUE ARCH FRAME (Gia Yến's High-Res Portrait - SOLO SHOWSTOPPER) */}
+        <div className="relative w-[680px] p-6 rounded-t-[320px] rounded-b-[54px] bg-[#FAF5EE] border-4 border-[#E5C378] shadow-[0_35px_90px_rgba(0,0,0,0.95)] z-20">
           
           {/* Inner Ornate Arch Container */}
-          <div className="relative w-full aspect-[3.2/4.3] rounded-[42px] overflow-hidden bg-[#2A050B] border-2 border-[#D1BBA2]/80">
+          <div className="relative w-full aspect-[3.2/4.2] rounded-t-[300px] rounded-b-[44px] overflow-hidden bg-[#2A050B] border-2 border-[#D1BBA2]/90 shadow-inner">
             <img
               src={graduatePhoto}
               alt="Lê Gia Yến Tân Cử Nhân"
@@ -310,60 +226,79 @@ export const GiaYenInvitationExportCard = forwardRef<
               decoding="sync"
               className="w-full h-full object-cover"
             />
+            
             {/* Cinematic Gradient Vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1A0205]/85 via-transparent to-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#140104]/90 via-transparent to-black/25" />
 
-            {/* Bottom Floating Plaque */}
-            <div className="absolute bottom-5 left-6 right-6 text-center">
-              <div className="inline-block px-6 py-2 rounded-full bg-[#180205]/85 backdrop-blur-md border border-[#E5C378]/70 shadow-lg">
-                <p className="text-2xl font-serif italic text-[#FAF5EE] font-bold">
+            {/* Inner Fine Gold Filigree Rim on Arch */}
+            <div className="absolute inset-2.5 rounded-t-[290px] rounded-b-[36px] border border-[#E5C378]/40 pointer-events-none" />
+
+            {/* Bottom Floating Haute-Couture Plaque */}
+            <div className="absolute bottom-6 left-8 right-8 text-center z-10">
+              <div className="inline-block px-8 py-3 rounded-full bg-[#180205]/90 backdrop-blur-md border-2 border-[#E5C378] shadow-2xl">
+                <p className="text-3xl sm:text-4xl font-serif italic text-[#FFFDF9] font-bold tracking-wide">
                   Lê Gia Yến
                 </p>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#E5C378] font-serif font-semibold mt-0.5">
-                  Tân Cử Nhân • ĐH Cần Thơ
+                <p className="text-xs sm:text-sm uppercase tracking-[0.35em] text-[#E5C378] font-serif font-bold mt-1">
+                  Tân Cử Nhân • Đại Học Cần Thơ
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Botanical Sprig (Calla Lily & Golden Leaves) at top right */}
-          <div className="absolute -top-6 -right-6 pointer-events-none z-30">
+          {/* Top-Right Grand Botanical Sprig (Calla Lily & Golden Olive Leaves) */}
+          <div className="absolute -top-8 -right-8 pointer-events-none z-30">
             <svg
-              className="w-20 h-28 text-[#FFFDF9] drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] rotate-[35deg]"
+              className="w-24 h-36 text-[#FFFDF9] drop-shadow-[0_12px_25px_rgba(0,0,0,0.7)] rotate-[32deg]"
               viewBox="0 0 100 140"
               fill="none"
             >
-              <path d="M50 40 Q45 80 40 130" stroke="#4A5D43" strokeWidth="3.5" />
+              <path d="M50 40 Q45 80 40 130" stroke="#4A5D43" strokeWidth="4" />
               <path d="M45 85 Q30 75 25 65 Q35 70 45 80" fill="#C5A059" opacity="0.95" />
               <path d="M42 105 Q55 95 60 85 Q50 92 42 100" fill="#C5A059" opacity="0.95" />
-              <path d="M50 15 C35 25 35 45 50 55 C65 45 65 25 50 15 Z" fill="#FFFDF9" stroke="#EADBCE" strokeWidth="1.5" />
-              <path d="M50 20 C42 26 42 38 50 48" stroke="#E5C378" strokeWidth="2" strokeLinecap="round" />
+              <path d="M50 15 C35 25 35 45 50 55 C65 45 65 25 50 15 Z" fill="#FFFDF9" stroke="#EADBCE" strokeWidth="1.8" />
+              <path d="M50 20 C42 26 42 38 50 48" stroke="#E5C378" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>
 
-          {/* 3D Wax Seal with Ribbon at bottom left */}
-          <div className="absolute -bottom-6 -left-6 z-30 flex items-center justify-center">
+          {/* Top-Left Delicate Golden Branch Accent */}
+          <div className="absolute -top-6 -left-6 pointer-events-none z-30">
+            <svg
+              className="w-16 h-24 text-[#E5C378] drop-shadow-[0_8px_18px_rgba(0,0,0,0.6)] -rotate-[40deg]"
+              viewBox="0 0 100 140"
+              fill="none"
+            >
+              <path d="M50 130 Q55 80 50 30" stroke="#C5A059" strokeWidth="3" />
+              <path d="M50 50 Q35 45 30 35 Q40 40 50 48" fill="#E5C378" />
+              <path d="M52 75 Q68 70 72 60 Q62 65 52 72" fill="#E5C378" />
+              <path d="M51 100 Q36 95 32 85 Q42 90 51 98" fill="#E5C378" />
+            </svg>
+          </div>
+
+          {/* 3D Wax Seal with Long Draping Silk Ribbons at bottom left */}
+          <div className="absolute -bottom-8 -left-8 z-30 flex items-center justify-center">
             {/* Hanging Ribbon Tails */}
             <div
-              className="absolute top-12 left-2 w-5 h-20 bg-gradient-to-b from-[#580B17] to-[#250308] shadow-xl rounded-b-sm border-x border-[#D1BBA2]/30 -rotate-12"
+              className="absolute top-14 left-3 w-6 h-28 bg-gradient-to-b from-[#580B17] via-[#400710] to-[#1E0207] shadow-2xl rounded-b-sm border-x border-[#D1BBA2]/30 -rotate-12"
               style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)" }}
             />
             <div
-              className="absolute top-12 left-8 w-5 h-22 bg-gradient-to-b from-[#580B17] to-[#250308] shadow-xl rounded-b-sm border-x border-[#D1BBA2]/30 rotate-12"
+              className="absolute top-14 left-10 w-6 h-30 bg-gradient-to-b from-[#580B17] via-[#400710] to-[#1E0207] shadow-2xl rounded-b-sm border-x border-[#D1BBA2]/30 rotate-12"
               style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)" }}
             />
 
-            {/* Oval Wax Seal */}
+            {/* Oval Carved Wax Seal */}
             <div
-              className="w-24 h-28 rounded-[52%_48%_55%_45%_/_48%_53%_47%_52%] p-2 relative flex flex-col items-center justify-center border-2 border-[#E5C378] shadow-2xl"
+              className="w-28 h-32 rounded-[52%_48%_55%_45%_/_48%_53%_47%_52%] p-2.5 relative flex flex-col items-center justify-center border-2 border-[#E5C378] shadow-[0_15px_35px_rgba(0,0,0,0.8)]"
               style={{
                 background: "radial-gradient(circle at 35% 30%, #FFFFFF 0%, #FAF5EE 45%, #EADBCE 85%, #CBB79F 100%)",
               }}
             >
-              <span className="text-base font-serif font-black tracking-widest text-[#580B17]">
+              <div className="absolute inset-2 rounded-[50%] border border-dashed border-[#C5A059] opacity-85" />
+              <span className="text-xl font-serif font-black tracking-widest text-[#580B17]">
                 LGY
               </span>
-              <span className="text-[8px] uppercase tracking-widest text-[#7D1A2A] font-bold">
+              <span className="text-[9px] uppercase tracking-widest text-[#7D1A2A] font-bold mt-0.5">
                 CTU • 2026
               </span>
             </div>
