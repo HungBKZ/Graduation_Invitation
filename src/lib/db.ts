@@ -169,9 +169,21 @@ export async function getEventSettings(
         // If table exists but row not seeded yet, seed default for this profile
         if (error.code === "PGRST116") {
           try {
-            await supabase.from("event_settings").insert({
-              ...defaultProfile,
-            });
+            let seedPayload: Record<string, unknown> = { ...defaultProfile };
+            for (let attempt = 0; attempt < 8; attempt++) {
+              const { error: seedErr } = await supabase
+                .from("event_settings")
+                .insert(seedPayload);
+              if (!seedErr) break;
+              const match =
+                seedErr.message?.match(/Could not find the '([^']+)' column/i) ||
+                seedErr.message?.match(/column "([^"]+)" of relation "event_settings" does not exist/i);
+              if (match && match[1] && match[1] in seedPayload) {
+                delete seedPayload[match[1]];
+                continue;
+              }
+              break;
+            }
           } catch {
             // ignore insert failure
           }
@@ -229,24 +241,59 @@ export async function updateEventSettings(
     targetId === "gia_yen" ? DEFAULT_GIA_YEN_SETTINGS : DEFAULT_EVENT_SETTINGS;
 
   const supabase = getSupabaseServerClient();
-  const updatedData = {
+  const updatedData: Record<string, unknown> = {
     ...updates,
     id: targetId,
     updated_at: new Date().toISOString(),
   };
 
   if (supabase) {
-    const { data, error } = await supabase
-      .from("event_settings")
-      .upsert(updatedData)
-      .select()
-      .single();
+    let payload = { ...updatedData };
+    let savedData: Record<string, unknown> | null = null;
+    let finalError: Error | null = null;
 
-    if (error) {
-      throw new Error(`Lỗi cập nhật cài đặt sự kiện trên Supabase: ${error.message}`);
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const { data, error } = await supabase
+        .from("event_settings")
+        .upsert(payload)
+        .select()
+        .single();
+
+      if (!error) {
+        savedData = data as Record<string, unknown>;
+        finalError = null;
+        break;
+      }
+
+      finalError = new Error(error.message);
+
+      // Detect if error is due to missing column in the Supabase schema cache
+      const match =
+        error.message?.match(/Could not find the '([^']+)' column/i) ||
+        error.message?.match(/column "([^"]+)" of relation "event_settings" does not exist/i);
+
+      if (match && match[1] && match[1] in payload) {
+        console.warn(
+          `Supabase event_settings table missing column '${match[1]}'. Omitting from payload and retrying upsert...`
+        );
+        delete payload[match[1]];
+        continue;
+      }
+
+      break;
     }
 
-    return normalizeSettings(data as Partial<EventSettings>, defaultProfile);
+    if (finalError) {
+      throw new Error(`Lỗi cập nhật cài đặt sự kiện trên Supabase: ${finalError.message}`);
+    }
+
+    return normalizeSettings(
+      {
+        ...updates,
+        ...(savedData || {}),
+      } as Partial<EventSettings>,
+      defaultProfile
+    );
   }
 
   const store = getLocalStore();

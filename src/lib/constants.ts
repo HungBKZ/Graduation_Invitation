@@ -135,7 +135,8 @@ export const DEFAULT_GIA_YEN_SETTINGS: EventSettings = {
   location_name: "Hội trường Rùa - Trường Đại học Cần Thơ (Khu II, đường 3 Tháng 2, P. Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ)",
   maps_url: GIA_YEN_MAPS_URL,
   graduate_photo_url: GIA_YEN_GRADUATE_PHOTO,
-  background_music_url: null,
+  background_music_url:
+    "https://res.cloudinary.com/dvucotc8z/video/upload/v1792599404/Joe_Hisaishi_-_Merry-Go-Round_of_Life_from_Howls_Moving_Castle_hkdl0h.mp3",
   memory_photo_urls: GIA_YEN_MEMORY_PHOTOS,
   invitation_message:
     "Một cột mốc đáng nhớ sẽ càng ý nghĩa hơn khi có những người thương quý cùng hiện diện. Én rất mong được gặp bạn trong ngày này!",

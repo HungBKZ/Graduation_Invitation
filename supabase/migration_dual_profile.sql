@@ -59,7 +59,7 @@ INSERT INTO event_settings (
   'Hội trường Rùa - Trường Đại học Cần Thơ (Khu II, đường 3 Tháng 2, P. Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ)',
   'https://www.google.com/maps?q=place_id:ChIJtTrVxzyIoDER3hT6JkXtmjI',
   'https://res.cloudinary.com/dvucotc8z/image/upload/v1792589960/DainXinkDep_imj1fp.jpg',
-  'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3',
+  'https://res.cloudinary.com/dvucotc8z/video/upload/v1792599404/Joe_Hisaishi_-_Merry-Go-Round_of_Life_from_Howls_Moving_Castle_hkdl0h.mp3',
   ARRAY[
     'https://res.cloudinary.com/dvucotc8z/image/upload/v1792595610/TrungTuyen_hln3pz.jpg',
     'https://res.cloudinary.com/dvucotc8z/image/upload/v1792595610/Bainhomdautien_w0c6ym.jpg',
@@ -102,3 +102,7 @@ ON CONFLICT (id) DO UPDATE SET
   parking_guide = EXCLUDED.parking_guide,
   theme_style = EXCLUDED.theme_style,
   updated_at = NOW();
+
+-- 4. Reload PostgREST schema cache
+NOTIFY pgrst, 'reload schema';
+

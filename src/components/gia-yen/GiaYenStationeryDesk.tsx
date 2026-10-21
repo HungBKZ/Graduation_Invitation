@@ -179,10 +179,10 @@ export function GiaYenStationeryDesk({
                   <span>{isPlayingAudio ? "Đang phát nhạc..." : "Nhạc thanh xuân"}</span>
                 </div>
                 <p className="text-sm font-serif font-bold text-[#3B0A13] truncate mt-0.5">
-                  Golden Hour Romance
+                  Merry-Go-Round of Life
                 </p>
-                <p className="text-xs text-[#7D1A2A]/80 font-serif italic">
-                  Chạm vào đĩa để {isPlayingAudio ? "tạm dừng" : "lắng nghe"}
+                <p className="text-xs text-[#7D1A2A]/80 font-serif italic truncate">
+                  Howl&apos;s Moving Castle • Joe Hisaishi
                 </p>
               </div>
             </div>

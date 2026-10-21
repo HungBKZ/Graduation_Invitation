@@ -23,7 +23,7 @@ export function GiaYenClientGuestPage({ guest, settings }: GiaYenClientGuestPage
 
   const audioTrackUrl =
     settings.background_music_url ||
-    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3";
+    "https://res.cloudinary.com/dvucotc8z/video/upload/v1792599404/Joe_Hisaishi_-_Merry-Go-Round_of_Life_from_Howls_Moving_Castle_hkdl0h.mp3";
 
   const handleStartAudio = () => {
     setIsPlayingAudio(true);
