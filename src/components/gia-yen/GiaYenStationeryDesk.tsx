@@ -122,7 +122,7 @@ export function GiaYenStationeryDesk({
                     {/* Bottom overlay badge */}
                     <div className="absolute bottom-3 left-3 right-3 text-center">
                       <span className="font-serif italic text-white text-lg font-medium drop-shadow-md">
-                        Lê Gia Yến (Én)
+                        Lê Gia Yến
                       </span>
                       <p className="text-[11px] uppercase tracking-wider text-[#FAF5EE]/90 font-serif">
                         Tài chính - Ngân hàng
