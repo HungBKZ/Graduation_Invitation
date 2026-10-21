@@ -65,13 +65,13 @@ export function GiaYenEnvelopeExperience({
       // silently ignore
     }
 
-    // Smooth transition
+    // Smooth transition after revealing the full invitation letter
     setTimeout(() => {
       setIsOpen(true);
       setTimeout(() => {
         onOpenComplete();
       }, 700);
-    }, 1000);
+    }, 1600);
   };
 
   return (
@@ -136,9 +136,8 @@ export function GiaYenEnvelopeExperience({
           }`}
           style={{ perspective: "1500px" }}
         >
-          {/* ENVELOPE BASE / BACK WALL (Rich Velvet) */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-[#4A0A14] via-[#3A060E] to-[#250308] overflow-hidden border border-[#D1BBA2]/40 shadow-inner">
-            
+          {/* LAYER 1: ENVELOPE BASE / BACK WALL (Rich Velvet) */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-[#4A0A14] via-[#3A060E] to-[#250308] overflow-hidden border border-[#D1BBA2]/40 shadow-inner z-0">
             {/* Fine French Linen texture simulation */}
             <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#D1BBA2_1px,transparent_1px)] [background-size:12px_12px]" />
 
@@ -149,133 +148,14 @@ export function GiaYenEnvelopeExperience({
               <span className="absolute bottom-1 left-1 text-[9px] text-[#E5C378]/70">✦</span>
               <span className="absolute bottom-1 right-1 text-[9px] text-[#E5C378]/70">✦</span>
             </div>
-
-            {/* ========================================================
-                INNER COTTON PAPER INVITATION CARD (Sliding Reveal)
-                ======================================================== */}
-            <div
-              className={`absolute left-6 right-6 top-6 bottom-6 rounded-xl bg-[#FFFDF9] shadow-[0_12px_35px_rgba(0,0,0,0.45)] transition-transform duration-700 ease-out flex flex-col justify-between p-5 sm:p-6 border border-[#D1BBA2] z-10 ${
-                isOpening ? "-translate-y-28 sm:-translate-y-36" : "translate-y-0"
-              }`}
-            >
-              {/* Inner Gold Gilded Double Border */}
-              <div className="border border-[#D1BBA2]/60 rounded-lg h-full p-4 flex flex-col items-center justify-center text-center relative bg-gradient-to-b from-[#FFFDF9] to-[#FAF5EE]">
-                <div className="absolute inset-1 rounded border border-[#D1BBA2]/30 pointer-events-none" />
-
-                <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-[#7D1A2A] font-serif font-bold">
-                  Trường Đại Học Cần Thơ
-                </span>
-
-                <div className="w-8 h-px bg-[#D1BBA2] my-1.5" />
-
-                <h3 className="text-2xl sm:text-3xl font-serif text-[#3B0A13] font-bold tracking-tight">
-                  Lê Gia Yến
-                </h3>
-
-                <p className="text-xs sm:text-sm text-[#7D1A2A] italic font-serif mt-0.5">
-                  Tân Cử Nhân • Tài chính - Ngân hàng
-                </p>
-
-                <div className="mt-3 px-3 py-1 rounded-full bg-[#580B17]/10 border border-[#580B17]/20 text-[11px] text-[#580B17] font-serif font-semibold">
-                  11:00 AM • Thứ Hai, 02.11.2026
-                </div>
-
-                <p className="text-[10px] text-[#3B0A13]/70 font-serif mt-1.5">
-                  Hội trường Rùa • Khu II Đại học Cần Thơ
-                </p>
-              </div>
-            </div>
-
-            {/* ========================================================
-                ENVELOPE FOLDED POCKET (Left, Right, Bottom Panels)
-                Completely seamless velvet — ZERO exposed gaps!
-                ======================================================== */}
-            <div className="absolute inset-0 pointer-events-none z-20">
-              
-              {/* Left Side Flap */}
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-[#4E0C15] to-[#3B060E]"
-                style={{
-                  clipPath: "polygon(0 0, 52% 50%, 0 100%)",
-                }}
-              >
-                <div className="w-full h-full border-r border-[#E5C378]/20" />
-              </div>
-
-              {/* Right Side Flap */}
-              <div
-                className="absolute inset-0 bg-gradient-to-l from-[#4E0C15] to-[#3B060E]"
-                style={{
-                  clipPath: "polygon(100% 0, 48% 50%, 100% 100%)",
-                }}
-              >
-                <div className="w-full h-full border-l border-[#E5C378]/20" />
-              </div>
-
-              {/* Bottom Triangular Flap (Overlaps Left & Right) */}
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-[#2E040B] via-[#450912] to-[#540B16] shadow-[0_-5px_15px_rgba(0,0,0,0.3)]"
-                style={{
-                  clipPath: "polygon(0 100%, 50% 44%, 100% 100%)",
-                }}
-              >
-                {/* Gold Piping along the bottom flap edge */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    clipPath: "polygon(0 100%, 50% 44%, 100% 100%, 100% 98.5%, 50% 45.5%, 0 98.5%)",
-                    backgroundColor: "#E5C378",
-                    opacity: 0.5,
-                  }}
-                />
-
-                {/* Subtle Monogram Hot-Stamp on Bottom */}
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-3 text-[10px] font-serif uppercase tracking-[0.25em] text-[#D1BBA2]/50">
-                  <span>✦</span>
-                  <span>LGY • CAN THO UNIVERSITY</span>
-                  <span>✦</span>
-                </div>
-              </div>
-
-              {/* ========================================================
-                  BURGUNDY SILK CHIFFON RIBBON (Horizontal Band)
-                  ======================================================== */}
-              <div className="absolute top-[50%] -translate-y-1/2 left-0 right-0 h-10 bg-gradient-to-r from-[#200307] via-[#520C17] to-[#200307] shadow-[0_4px_14px_rgba(0,0,0,0.6)] border-y border-[#D1BBA2]/30 flex items-center justify-between px-6 z-25">
-                <div className="w-full h-px border-b border-dashed border-[#E5C378]/40" />
-              </div>
-
-              {/* Silk Ribbon Tails draping downward */}
-              <div className="absolute top-[50%] left-1/2 -translate-x-1/2 z-26 pointer-events-none">
-                {/* Left Ribbon Tail */}
-                <div
-                  className="absolute -left-6 top-3 w-5 h-20 bg-gradient-to-b from-[#520C17] to-[#200307] shadow-xl rounded-b-sm border-x border-[#D1BBA2]/25"
-                  style={{
-                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
-                    transform: "rotate(-12deg)",
-                  }}
-                />
-                {/* Right Ribbon Tail */}
-                <div
-                  className="absolute left-1 top-3 w-5 h-22 bg-gradient-to-b from-[#520C17] to-[#200307] shadow-xl rounded-b-sm border-x border-[#D1BBA2]/25"
-                  style={{
-                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
-                    transform: "rotate(10deg)",
-                  }}
-                />
-              </div>
-
-            </div>
           </div>
 
-          {/* ========================================================
-              TOP ENVELOPE TRIANGLE FLAP (3D ROTATION)
-              Overlaps downward seamlessly to 56% depth
-              ======================================================== */}
+          {/* LAYER 2: TOP ENVELOPE TRIANGLE FLAP (Flips UP to z-10 behind the emerging card) */}
           <div
-            className={`absolute top-0 left-0 right-0 h-full origin-top transition-transform duration-700 ease-in-out z-30 pointer-events-none ${
+            className={`absolute top-0 left-0 right-0 h-full origin-top transition-all duration-700 ease-in-out pointer-events-none ${
               isOpening
-                ? "[transform:rotateX(-165deg)]"
-                : "[transform:rotateX(0deg)]"
+                ? "z-10 [transform:rotateX(-170deg)] opacity-95"
+                : "z-35 [transform:rotateX(0deg)] opacity-100"
             }`}
             style={{ transformStyle: "preserve-3d" }}
           >
@@ -301,7 +181,6 @@ export function GiaYenEnvelopeExperience({
                 viewBox="0 0 500 280"
                 preserveAspectRatio="none"
               >
-                {/* Left diagonal lace scalloped edge */}
                 <path
                   d="M0,0 L250,280 L500,0"
                   fill="none"
@@ -311,6 +190,111 @@ export function GiaYenEnvelopeExperience({
                   opacity="0.85"
                 />
               </svg>
+            </div>
+          </div>
+
+          {/* LAYER 3: INNER COTTON PAPER INVITATION CARD (Slides UP into FULL UNCLIPPED view) */}
+          <div
+            className={`absolute left-5 right-5 sm:left-6 sm:right-6 top-6 bottom-6 rounded-xl bg-[#FFFDF9] shadow-[0_20px_50px_rgba(0,0,0,0.65)] transition-all duration-700 ease-out flex flex-col justify-between p-4 sm:p-5 border border-[#D1BBA2] z-20 ${
+              isOpening ? "-translate-y-36 sm:-translate-y-44 scale-[1.02]" : "translate-y-0"
+            }`}
+          >
+            {/* Inner Gold Gilded Double Border */}
+            <div className="border border-[#D1BBA2]/70 rounded-lg h-full p-3 sm:p-4 flex flex-col items-center justify-center text-center relative bg-gradient-to-b from-[#FFFDF9] via-[#FFFDF9] to-[#FAF5EE]">
+              <div className="absolute inset-1 rounded border border-[#D1BBA2]/30 pointer-events-none" />
+
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-[#7D1A2A] font-serif font-bold">
+                Trường Đại Học Cần Thơ
+              </span>
+
+              <div className="w-10 h-px bg-[#D1BBA2] my-1.5" />
+
+              <h3 className="text-2xl sm:text-3xl font-serif text-[#3B0A13] font-bold tracking-tight">
+                Lê Gia Yến
+              </h3>
+
+              <p className="text-xs sm:text-sm text-[#7D1A2A] italic font-serif mt-0.5 font-medium">
+                Tân Cử Nhân • Tài chính - Ngân hàng
+              </p>
+
+              <div className="mt-2.5 px-3.5 py-1 rounded-full bg-[#580B17]/10 border border-[#580B17]/25 text-[11px] text-[#580B17] font-serif font-semibold">
+                11:00 AM • Thứ Hai, 02.11.2026
+              </div>
+
+              <p className="text-[10px] sm:text-[11px] text-[#3B0A13]/80 font-serif mt-1">
+                Hội trường Rùa • Khu II Đại học Cần Thơ
+              </p>
+            </div>
+          </div>
+
+          {/* LAYER 4: ENVELOPE FOLDED POCKET (Left, Right, Bottom Panels & Ribbon Band) */}
+          <div className="absolute inset-0 pointer-events-none z-30 rounded-2xl overflow-hidden">
+            {/* Left Side Flap */}
+            <div
+              className="absolute inset-0 bg-gradient-to-r from-[#4E0C15] to-[#3B060E]"
+              style={{
+                clipPath: "polygon(0 0, 52% 50%, 0 100%)",
+              }}
+            >
+              <div className="w-full h-full border-r border-[#E5C378]/20" />
+            </div>
+
+            {/* Right Side Flap */}
+            <div
+              className="absolute inset-0 bg-gradient-to-l from-[#4E0C15] to-[#3B060E]"
+              style={{
+                clipPath: "polygon(100% 0, 48% 50%, 100% 100%)",
+              }}
+            >
+              <div className="w-full h-full border-l border-[#E5C378]/20" />
+            </div>
+
+            {/* Bottom Triangular Flap (Overlaps Left & Right) */}
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-[#2E040B] via-[#450912] to-[#540B16] shadow-[0_-5px_15px_rgba(0,0,0,0.3)]"
+              style={{
+                clipPath: "polygon(0 100%, 50% 44%, 100% 100%)",
+              }}
+            >
+              {/* Gold Piping along the bottom flap edge */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  clipPath: "polygon(0 100%, 50% 44%, 100% 100%, 100% 98.5%, 50% 45.5%, 0 98.5%)",
+                  backgroundColor: "#E5C378",
+                  opacity: 0.5,
+                }}
+              />
+
+              {/* Subtle Monogram Hot-Stamp on Bottom */}
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-3 text-[10px] font-serif uppercase tracking-[0.25em] text-[#D1BBA2]/50">
+                <span>✦</span>
+                <span>LGY • CAN THO UNIVERSITY</span>
+                <span>✦</span>
+              </div>
+            </div>
+
+            {/* BURGUNDY SILK CHIFFON RIBBON (Horizontal Band) */}
+            <div className="absolute top-[50%] -translate-y-1/2 left-0 right-0 h-10 bg-gradient-to-r from-[#200307] via-[#520C17] to-[#200307] shadow-[0_4px_14px_rgba(0,0,0,0.6)] border-y border-[#D1BBA2]/30 flex items-center justify-between px-6 z-25">
+              <div className="w-full h-px border-b border-dashed border-[#E5C378]/40" />
+            </div>
+
+            {/* Silk Ribbon Tails draping downward */}
+            <div className="absolute top-[50%] left-1/2 -translate-x-1/2 z-26 pointer-events-none">
+              <div
+                className="absolute -left-6 top-3 w-5 h-20 bg-gradient-to-b from-[#520C17] to-[#200307] shadow-xl rounded-b-sm border-x border-[#D1BBA2]/25"
+                style={{
+                  clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
+                  transform: "rotate(-12deg)",
+                }}
+              />
+              <div
+                className="absolute left-1 top-3 w-5 h-22 bg-gradient-to-b from-[#520C17] to-[#200307] shadow-xl rounded-b-sm border-x border-[#D1BBA2]/25"
+                style={{
+                  clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
+                  transform: "rotate(10deg)",
+                }}
+              />
             </div>
           </div>
 
