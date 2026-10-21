@@ -101,7 +101,7 @@ export function GiaYenEnvelopeExperience({
         {/* ========================================================
             HEADER: ROYAL FRENCH MONOGRAM & SALUTATION
             ======================================================== */}
-        <div className="mb-6 sm:mb-8 text-center flex flex-col items-center">
+        <div className="mb-8 sm:mb-12 text-center flex flex-col items-center">
           
           {/* Royal Filigree Header Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#35050C]/90 border border-[#D1BBA2]/40 text-[#D1BBA2] shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md">
@@ -154,10 +154,15 @@ export function GiaYenEnvelopeExperience({
           <div
             className={`absolute top-0 left-0 right-0 h-full origin-top transition-all duration-700 ease-in-out pointer-events-none ${
               isOpening
-                ? "z-10 [transform:rotateX(-170deg)] opacity-95"
+                ? "z-10 [transform:rotateX(-170deg)] opacity-90"
                 : "z-35 [transform:rotateX(0deg)] opacity-100"
             }`}
-            style={{ transformStyle: "preserve-3d" }}
+            style={{
+              transformStyle: "preserve-3d",
+              WebkitTransformStyle: "preserve-3d",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+            }}
           >
             {/* The Top Triangle Flap */}
             <div
@@ -195,33 +200,37 @@ export function GiaYenEnvelopeExperience({
 
           {/* LAYER 3: INNER COTTON PAPER INVITATION CARD (Slides UP into FULL UNCLIPPED view) */}
           <div
-            className={`absolute left-5 right-5 sm:left-6 sm:right-6 top-6 bottom-6 rounded-xl bg-[#FFFDF9] shadow-[0_20px_50px_rgba(0,0,0,0.65)] transition-all duration-700 ease-out flex flex-col justify-between p-4 sm:p-5 border border-[#D1BBA2] z-20 ${
-              isOpening ? "-translate-y-36 sm:-translate-y-44 scale-[1.02]" : "translate-y-0"
+            className={`absolute left-3.5 right-3.5 sm:left-6 sm:right-6 top-3.5 bottom-3.5 sm:top-6 sm:bottom-6 rounded-xl bg-[#FFFDF9] shadow-[0_20px_50px_rgba(0,0,0,0.65)] transition-all duration-700 ease-out flex flex-col justify-between p-3 sm:p-5 border border-[#D1BBA2] z-20 ${
+              isOpening ? "-translate-y-28 sm:-translate-y-44 scale-[1.02]" : "translate-y-0"
             }`}
+            style={{
+              transformStyle: "preserve-3d",
+              WebkitTransformStyle: "preserve-3d",
+            }}
           >
             {/* Inner Gold Gilded Double Border */}
-            <div className="border border-[#D1BBA2]/70 rounded-lg h-full p-3 sm:p-4 flex flex-col items-center justify-center text-center relative bg-gradient-to-b from-[#FFFDF9] via-[#FFFDF9] to-[#FAF5EE]">
+            <div className="border border-[#D1BBA2]/70 rounded-lg h-full p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative bg-gradient-to-b from-[#FFFDF9] via-[#FFFDF9] to-[#FAF5EE]">
               <div className="absolute inset-1 rounded border border-[#D1BBA2]/30 pointer-events-none" />
 
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-[#7D1A2A] font-serif font-bold">
+              <span className="text-[9px] sm:text-[11px] uppercase tracking-[0.3em] sm:tracking-[0.35em] text-[#7D1A2A] font-serif font-bold">
                 Trường Đại Học Cần Thơ
               </span>
 
-              <div className="w-10 h-px bg-[#D1BBA2] my-1.5" />
+              <div className="w-8 sm:w-10 h-px bg-[#D1BBA2] my-1 sm:my-1.5" />
 
-              <h3 className="text-2xl sm:text-3xl font-serif text-[#3B0A13] font-bold tracking-tight">
+              <h3 className="text-xl sm:text-3xl font-serif text-[#3B0A13] font-bold tracking-tight">
                 Lê Gia Yến
               </h3>
 
-              <p className="text-xs sm:text-sm text-[#7D1A2A] italic font-serif mt-0.5 font-medium">
+              <p className="text-[11px] sm:text-sm text-[#7D1A2A] italic font-serif mt-0.5 font-medium">
                 Tân Cử Nhân • Tài chính - Ngân hàng
               </p>
 
-              <div className="mt-2.5 px-3.5 py-1 rounded-full bg-[#580B17]/10 border border-[#580B17]/25 text-[11px] text-[#580B17] font-serif font-semibold">
+              <div className="mt-2 sm:mt-2.5 px-3 sm:px-3.5 py-0.5 sm:py-1 rounded-full bg-[#580B17]/10 border border-[#580B17]/25 text-[10px] sm:text-[11px] text-[#580B17] font-serif font-semibold">
                 11:00 AM • Thứ Hai, 02.11.2026
               </div>
 
-              <p className="text-[10px] sm:text-[11px] text-[#3B0A13]/80 font-serif mt-1">
+              <p className="text-[9px] sm:text-[11px] text-[#3B0A13]/80 font-serif mt-0.5 sm:mt-1">
                 Hội trường Rùa • Khu II Đại học Cần Thơ
               </p>
             </div>
