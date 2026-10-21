@@ -63,17 +63,65 @@ export const GIA_YEN_GRADUATE_PHOTO =
 export const GIA_YEN_MAPS_URL =
   "https://www.google.com/maps?q=place_id:ChIJtTrVxzyIoDER3hT6JkXtmjI";
 
-export const GIA_YEN_MEMORY_PHOTOS: string[] = [
-  "https://res.cloudinary.com/dvucotc8z/image/upload/v1792590231/1792590177808_2062798856725247085_2062798856725247085_8601190c8537a65cef01d7c55acffb7c_j2ydir.jpg",
-  "https://res.cloudinary.com/dvucotc8z/image/upload/v1792590231/1792590177768_2062798856725247085_2062798856725247085_b132dfe12214de9cec87bd803b71f891_przkz3.jpg",
-  "https://res.cloudinary.com/dvucotc8z/image/upload/v1792590231/1792590177799_2062798856725247085_2062798856725247085_d7699ede8dad4f9ccfe6bf6fe9e0473c_fiurg4.jpg",
-  "https://res.cloudinary.com/dvucotc8z/image/upload/v1792590231/1792590177755_2062798856725247085_2062798856725247085_64f77496608a17f4d6da876bfc137b4f_tvttmm.jpg",
-  "https://res.cloudinary.com/dvucotc8z/image/upload/v1792590231/1792590177789_2062798856725247085_2062798856725247085_c0aef555b27c783f2629e4494a3ac378_znqwpg.jpg",
-  "https://res.cloudinary.com/dvucotc8z/image/upload/v1792590231/1792590177816_2062798856725247085_2062798856725247085_dfbddae28ed42548e7890e9587c4a78b_lkujou.jpg",
-  "https://res.cloudinary.com/dvucotc8z/image/upload/v1792590232/1792590177823_2062798856725247085_2062798856725247085_dfc22e0ef5324ab67ad3a33e468f84e7_i5cygd.jpg",
-  "https://res.cloudinary.com/dvucotc8z/image/upload/v1792590409/1792590383980_2062798856725247085_2062798856725247085_dd550b1ba8e25253153dc93199ae3158_xlwlfn.jpg",
-  "https://res.cloudinary.com/dvucotc8z/image/upload/v1792590415/1792590399888_2062798856725247085_2062798856725247085_5e315a099aee79d46893913109838c16_jzyfrf.jpg",
+export interface GiaYenMemoryItem {
+  title: string;
+  url: string;
+}
+
+export const GIA_YEN_MILESTONE_PHOTOS: GiaYenMemoryItem[] = [
+  {
+    title: "Trúng tuyển",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595610/TrungTuyen_hln3pz.jpg",
+  },
+  {
+    title: "Bài nhóm đầu tiên",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595610/Bainhomdautien_w0c6ym.jpg",
+  },
+  {
+    title: "Ghét Triết học",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595610/ghetTriet_xihy7g.jpg",
+  },
+  {
+    title: "Hoà An",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595610/HoaAn_d7nzjl.jpg",
+  },
+  {
+    title: "Kiến tập",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595609/KienTap_t0ojou.jpg",
+  },
+  {
+    title: "Nghiên cứu khoa học",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595610/NCKH_p6diow.jpg",
+  },
+  {
+    title: "Báo cáo luận",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595611/BaoCaoLuan_rrr9gp.jpg",
+  },
+  {
+    title: "Mùa hè xanh",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595609/MuaHeXanh_fd7m5b.jpg",
+  },
+  {
+    title: "Thi bảo hiểm",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595609/ThiBaoHiem_kprsbh.jpg",
+  },
+  {
+    title: "Hội trại",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595610/HoiTrai_epwkk3.jpg",
+  },
+  {
+    title: "Hoàn thành Khóa luận",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595609/HoanThanhBaoCao_hvwmt1.jpg",
+  },
+  {
+    title: "Đi chơi xa nhe",
+    url: "https://res.cloudinary.com/dvucotc8z/image/upload/v1792595609/DiChoiXaNhe_b5ezui.jpg",
+  },
 ];
+
+export const GIA_YEN_MEMORY_PHOTOS: string[] = GIA_YEN_MILESTONE_PHOTOS.map(
+  (item) => item.url
+);
 
 export const DEFAULT_GIA_YEN_SETTINGS: EventSettings = {
   id: "gia_yen",

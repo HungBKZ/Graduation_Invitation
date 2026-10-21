@@ -7,6 +7,7 @@ import { GiaYenStationeryDesk } from "./GiaYenStationeryDesk";
 import { GiaYenMemoryGallery } from "./GiaYenMemoryGallery";
 import { GiaYenRsvpSection } from "./GiaYenRsvpSection";
 import { GiaYenDownloadModal } from "./GiaYenDownloadModal";
+import { GIA_YEN_MEMORY_PHOTOS } from "@/lib/constants";
 import { MusicPlayer } from "@/components/MusicPlayer";
 import { Heart, Sparkles, Download, Navigation, Phone, ExternalLink } from "lucide-react";
 
@@ -68,8 +69,14 @@ export function GiaYenClientGuestPage({ guest, settings }: GiaYenClientGuestPage
           onOpenDownloadModal={() => setIsDownloadOpen(true)}
         />
 
-        {/* Section 2: Memory Scrapbook Gallery (9 Photos - Natural Aspect Ratio) */}
-        <GiaYenMemoryGallery photos={settings.memory_photo_urls} />
+        {/* Section 2: Memory Scrapbook Gallery (12 Milestone Photos - Natural Aspect Ratio) */}
+        <GiaYenMemoryGallery
+          photos={
+            settings.memory_photo_urls && settings.memory_photo_urls.length >= 12
+              ? settings.memory_photo_urls
+              : GIA_YEN_MEMORY_PHOTOS
+          }
+        />
 
         {/* Section 3: French Floral RSVP Form */}
         <GiaYenRsvpSection

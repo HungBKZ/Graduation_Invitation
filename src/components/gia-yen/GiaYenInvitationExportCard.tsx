@@ -2,12 +2,30 @@
 
 import React, { forwardRef } from "react";
 import { EventSettings } from "@/types";
+import { GIA_YEN_MILESTONE_PHOTOS } from "@/lib/constants";
 
 interface GiaYenInvitationExportCardProps {
   guestName: string;
   settings: EventSettings;
   resolvedMemoryPhotos?: string[];
   resolvedGraduatePhoto?: string;
+}
+
+const TITLE_MAP = new Map<string, string>(
+  GIA_YEN_MILESTONE_PHOTOS.map((item) => [item.url, item.title])
+);
+
+function getMilestoneTitle(url: string | undefined, defaultTitle: string): string {
+  if (!url) return defaultTitle;
+  if (TITLE_MAP.has(url)) return TITLE_MAP.get(url)!;
+  const filename = url.split("/").pop()?.split(".")[0];
+  if (filename) {
+    const matched = GIA_YEN_MILESTONE_PHOTOS.find((item) =>
+      item.url.includes(filename)
+    );
+    if (matched) return matched.title;
+  }
+  return defaultTitle;
 }
 
 export const GiaYenInvitationExportCard = forwardRef<
@@ -179,15 +197,15 @@ export const GiaYenInvitationExportCard = forwardRef<
           ======================================================== */}
       <div className="relative z-20 flex items-center justify-center my-3">
         
-        {/* SATELLITE POLAROID 1 (Left - Friends & Memories) */}
-        {memoryPhotos[2] && (
+        {/* SATELLITE POLAROID 1 (Left - Milestone highlight e.g. Mùa hè xanh / Kỷ niệm) */}
+        {(memoryPhotos[7] || memoryPhotos[2]) && (
           <div className="absolute -left-2 top-10 w-[320px] p-4 pb-8 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] -rotate-10 border-2 border-[#D1BBA2] z-10">
             {/* Washi Tape Strip */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#E5C378]/80 rotate-[-3deg] rounded-sm shadow-md border-x-2 border-white" />
 
             <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
               <img
-                src={memoryPhotos[2]}
+                src={memoryPhotos[7] || memoryPhotos[2]}
                 alt="Memory Polaroid 1"
                 crossOrigin="anonymous"
                 loading="eager"
@@ -196,23 +214,23 @@ export const GiaYenInvitationExportCard = forwardRef<
               />
             </div>
             <div className="mt-3 flex items-center justify-between px-1">
-              <p className="text-base text-[#580B17] italic font-handwriting font-bold">
-                Thanh xuân rực rỡ bên bạn bè
+              <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
+                {getMilestoneTitle(memoryPhotos[7] || memoryPhotos[2], "Mùa hè xanh")}
               </p>
-              <span className="text-sm text-[#E5C378]">✦</span>
+              <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
             </div>
           </div>
         )}
 
-        {/* SATELLITE POLAROID 2 (Right - Campus Smile) */}
-        {memoryPhotos[3] && (
+        {/* SATELLITE POLAROID 2 (Right - Milestone highlight e.g. Hoàn thành Khóa luận / Kỷ niệm) */}
+        {(memoryPhotos[10] || memoryPhotos[3]) && (
           <div className="absolute -right-2 top-16 w-[320px] p-4 pb-8 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] rotate-9 border-2 border-[#D1BBA2] z-10">
             {/* Washi Tape Strip */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#E5C378]/80 rotate-[4deg] rounded-sm shadow-md border-x-2 border-white" />
 
             <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
               <img
-                src={memoryPhotos[3]}
+                src={memoryPhotos[10] || memoryPhotos[3]}
                 alt="Memory Polaroid 2"
                 crossOrigin="anonymous"
                 loading="eager"
@@ -221,10 +239,10 @@ export const GiaYenInvitationExportCard = forwardRef<
               />
             </div>
             <div className="mt-3 flex items-center justify-between px-1">
-              <p className="text-base text-[#580B17] italic font-handwriting font-bold">
-                Nụ cười rạng ngời ngày tựu trường
+              <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
+                {getMilestoneTitle(memoryPhotos[10] || memoryPhotos[3], "Hoàn thành Khóa luận")}
               </p>
-              <span className="text-sm text-[#E5C378]">✦</span>
+              <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
             </div>
           </div>
         )}
