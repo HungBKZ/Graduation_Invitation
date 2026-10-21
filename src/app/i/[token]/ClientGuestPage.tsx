@@ -12,6 +12,7 @@ import { RsvpSection } from "@/components/RsvpSection";
 import { ThankYouSection } from "@/components/ThankYouSection";
 import { MusicPlayer } from "@/components/MusicPlayer";
 import { DownloadInvitationModal } from "@/components/DownloadInvitationModal";
+import { GiaYenClientGuestPage } from "@/components/gia-yen/GiaYenClientGuestPage";
 
 interface ClientGuestPageProps {
   guest: Guest;
@@ -19,6 +20,15 @@ interface ClientGuestPageProps {
 }
 
 export function ClientGuestPage({ guest, settings }: ClientGuestPageProps) {
+  const isGiaYen =
+    guest.host_id === "gia_yen" ||
+    guest.invitation_token.startsWith("gy-") ||
+    settings.theme_style === "burgundy_romance";
+
+  if (isGiaYen) {
+    return <GiaYenClientGuestPage guest={guest} settings={settings} />;
+  }
+
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);

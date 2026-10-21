@@ -1,4 +1,5 @@
 export type RsvpStatus = "attending" | "maybe" | "declined";
+export type HostId = "thanh_hung" | "gia_yen";
 
 export interface Guest {
   id: string;
@@ -7,6 +8,7 @@ export interface Guest {
   is_active: boolean;
   created_at: string;
   first_opened_at: string | null;
+  host_id?: HostId;
   rsvp?: RsvpResponse | null;
 }
 
@@ -36,6 +38,10 @@ export interface EventSettings {
   invitation_message: string;
   thank_you_message: string;
   updated_at: string;
+  contact_phone?: string | null;
+  assistant_phone?: string | null;
+  parking_guide?: string | null;
+  theme_style?: "crimson_gold" | "burgundy_romance" | string | null;
 }
 
 export interface OverviewStats {

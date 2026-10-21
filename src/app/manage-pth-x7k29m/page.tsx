@@ -23,9 +23,9 @@ export default async function AdminPage() {
   }
 
   const [guests, settings, stats] = await Promise.all([
-    getAllGuests(),
-    getEventSettings(),
-    getOverviewStats(),
+    getAllGuests("thanh_hung"),
+    getEventSettings("default"),
+    getOverviewStats("thanh_hung"),
   ]);
 
   return (

@@ -121,18 +121,64 @@
   z-index: 20;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+/* Deep Burgundy Romance Styling Tokens */
+:root {
+  --burgundy-deep: #3B0A13;
+  --burgundy-primary: #540F1B;
+  --burgundy-rose: #7D1A2A;
+  --burgundy-accent: #A63A4B;
+  --burgundy-blush: #F7EBEB;
+  --cream-desk: #F5EBE1;
+  --cream-paper: #FAF5EE;
+  --gold-sand: #D1BBA2;
 }
-::-webkit-scrollbar-track {
-  background: #FAF6F0;
+
+.burgundy-gradient-text {
+  background: linear-gradient(135deg, #540F1B 0%, #7D1A2A 50%, #C25E6E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(197, 160, 89, 0.4);
-  border-radius: 4px;
+
+.burgundy-rose-gradient {
+  background: linear-gradient(135deg, #540F1B 0%, #6E1524 60%, #3B0A13 100%);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(158, 27, 50, 0.6);
+
+.french-stationery-paper {
+  background: #FAF5EE;
+  background-image: radial-gradient(#d1bba2 0.75px, transparent 0.75px);
+  background-size: 16px 16px;
+  box-shadow: 0 16px 40px rgba(59, 10, 19, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
 }
+
+.baroque-oval-frame {
+  position: relative;
+  border-radius: 9999px;
+  border: 4px solid #FAF5EE;
+  outline: 1.5px solid #D1BBA2;
+  box-shadow: 0 10px 30px rgba(84, 15, 27, 0.2), inset 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes spinRecordSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-record-active {
+  animation: spinRecordSlow 8s linear infinite;
+}
+
+.spin-record-paused {
+  animation: spinRecordSlow 8s linear infinite;
+  animation-play-state: paused;
+}
+
+/* Lace trim simulation on envelope flap */
+.lace-scallop-trim {
+  background-image: radial-gradient(circle at 10px 0, transparent 0, transparent 7px, #540F1B 8px);
+  background-size: 20px 20px;
+}
+

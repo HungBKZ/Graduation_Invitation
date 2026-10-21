@@ -3,16 +3,21 @@ import path from "path";
 import {
   EventSettings,
   Guest,
+  HostId,
   OverviewStats,
   RsvpResponse,
   RsvpStatus,
 } from "@/types";
-import { DEFAULT_EVENT_SETTINGS } from "./constants";
+import {
+  DEFAULT_EVENT_SETTINGS,
+  DEFAULT_GIA_YEN_SETTINGS,
+} from "./constants";
 import { generateInvitationToken } from "./token";
 import { getSupabaseServerClient, isSupabaseConfigured } from "./supabase";
 
 interface StoreData {
   eventSettings: EventSettings;
+  giaYenSettings?: EventSettings;
   guests: Guest[];
   rsvps: Record<string, RsvpResponse>; // keyed by guest_id
 }
@@ -24,6 +29,7 @@ interface SupabaseGuestRow {
   is_active: boolean;
   created_at: string;
   first_opened_at: string | null;
+  host_id?: string | null;
   rsvp_responses?: RsvpResponse | RsvpResponse[] | null;
 }
 
@@ -124,6 +130,7 @@ function getLocalStore(): StoreData {
   } catch {
     return {
       eventSettings: { ...DEFAULT_EVENT_SETTINGS },
+      giaYenSettings: { ...DEFAULT_GIA_YEN_SETTINGS },
       guests: [],
       rsvps: {},
     };
@@ -142,77 +149,96 @@ function saveLocalStore(data: StoreData) {
 // UNIFIED DATABASE PERSISTENCE API
 // ==========================================
 
-export async function getEventSettings(): Promise<EventSettings> {
+export async function getEventSettings(
+  profileId: string = "default"
+): Promise<EventSettings> {
+  const targetId = profileId === "gia_yen" ? "gia_yen" : "default";
+  const defaultProfile =
+    targetId === "gia_yen" ? DEFAULT_GIA_YEN_SETTINGS : DEFAULT_EVENT_SETTINGS;
+
   const supabase = getSupabaseServerClient();
   if (supabase) {
     try {
       const { data, error } = await supabase
         .from("event_settings")
         .select("*")
-        .eq("id", "default")
+        .eq("id", targetId)
         .single();
 
       if (error) {
-        // If table exists but row not seeded yet, seed default
+        // If table exists but row not seeded yet, seed default for this profile
         if (error.code === "PGRST116") {
           try {
             await supabase.from("event_settings").insert({
-              ...DEFAULT_EVENT_SETTINGS,
+              ...defaultProfile,
             });
           } catch {
             // ignore insert failure
           }
-          return DEFAULT_EVENT_SETTINGS;
+          return defaultProfile;
         }
-        console.warn("Supabase event_settings warning (fallback to default):", error.message);
-        return DEFAULT_EVENT_SETTINGS;
+        console.warn(`Supabase event_settings warning for ${targetId}:`, error.message);
+        return defaultProfile;
       }
 
-      if (data) return normalizeSettings(data as Partial<EventSettings>);
+      if (data) return normalizeSettings(data as Partial<EventSettings>, defaultProfile);
     } catch (err: unknown) {
-      console.warn("Supabase fetch error in getEventSettings (fallback to default):", err);
-      return DEFAULT_EVENT_SETTINGS;
+      console.warn(`Supabase fetch error in getEventSettings for ${targetId}:`, err);
+      return defaultProfile;
     }
   }
 
   const store = getLocalStore();
-  return normalizeSettings(store.eventSettings);
+  if (targetId === "gia_yen") {
+    return normalizeSettings(store.giaYenSettings || DEFAULT_GIA_YEN_SETTINGS, DEFAULT_GIA_YEN_SETTINGS);
+  }
+  return normalizeSettings(store.eventSettings, DEFAULT_EVENT_SETTINGS);
 }
 
 // Fill fields that older stored rows may not have yet
-function normalizeSettings(raw: Partial<EventSettings>): EventSettings {
+function normalizeSettings(
+  raw: Partial<EventSettings>,
+  defaults: EventSettings = DEFAULT_EVENT_SETTINGS
+): EventSettings {
   const invitation_message = raw.invitation_message
     ? raw.invitation_message.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n")
-    : DEFAULT_EVENT_SETTINGS.invitation_message;
+    : defaults.invitation_message;
 
   const thank_you_message = raw.thank_you_message
     ? raw.thank_you_message.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n")
-    : DEFAULT_EVENT_SETTINGS.thank_you_message;
+    : defaults.thank_you_message;
 
   return {
-    ...DEFAULT_EVENT_SETTINGS,
+    ...defaults,
     ...raw,
     invitation_message,
     thank_you_message,
-    memory_photo_urls: Array.isArray(raw.memory_photo_urls)
-      ? raw.memory_photo_urls
-      : DEFAULT_EVENT_SETTINGS.memory_photo_urls,
+    memory_photo_urls:
+      Array.isArray(raw.memory_photo_urls) && raw.memory_photo_urls.length > 0
+        ? raw.memory_photo_urls
+        : defaults.memory_photo_urls,
   } as EventSettings;
 }
 
 export async function updateEventSettings(
-  updates: Partial<EventSettings>
+  updates: Partial<EventSettings>,
+  profileId: string = "default"
 ): Promise<EventSettings> {
+  const targetId = profileId === "gia_yen" ? "gia_yen" : "default";
+  const defaultProfile =
+    targetId === "gia_yen" ? DEFAULT_GIA_YEN_SETTINGS : DEFAULT_EVENT_SETTINGS;
+
   const supabase = getSupabaseServerClient();
   const updatedData = {
     ...updates,
+    id: targetId,
     updated_at: new Date().toISOString(),
   };
 
   if (supabase) {
     const { data, error } = await supabase
       .from("event_settings")
-      .upsert({ id: "default", ...updatedData })
+      .upsert(updatedData)
       .select()
       .single();
 
@@ -220,16 +246,25 @@ export async function updateEventSettings(
       throw new Error(`Lỗi cập nhật cài đặt sự kiện trên Supabase: ${error.message}`);
     }
 
-    return normalizeSettings(data as Partial<EventSettings>);
+    return normalizeSettings(data as Partial<EventSettings>, defaultProfile);
   }
 
   const store = getLocalStore();
+  if (targetId === "gia_yen") {
+    store.giaYenSettings = {
+      ...(store.giaYenSettings || DEFAULT_GIA_YEN_SETTINGS),
+      ...updatedData,
+    };
+    saveLocalStore(store);
+    return normalizeSettings(store.giaYenSettings, DEFAULT_GIA_YEN_SETTINGS);
+  }
+
   store.eventSettings = {
     ...store.eventSettings,
     ...updatedData,
   };
   saveLocalStore(store);
-  return normalizeSettings(store.eventSettings);
+  return normalizeSettings(store.eventSettings, DEFAULT_EVENT_SETTINGS);
 }
 
 export async function getGuestByToken(token: string): Promise<Guest | null> {
@@ -253,6 +288,13 @@ export async function getGuestByToken(token: string): Promise<Guest | null> {
         const rsvp = Array.isArray(guestData.rsvp_responses)
           ? guestData.rsvp_responses[0]
           : guestData.rsvp_responses;
+
+        const hostId: HostId = (guestData as any).host_id
+          ? (guestData as any).host_id
+          : token.startsWith("gy-")
+          ? "gia_yen"
+          : "thanh_hung";
+
         return {
           id: guestData.id,
           name: guestData.name,
@@ -260,6 +302,7 @@ export async function getGuestByToken(token: string): Promise<Guest | null> {
           is_active: guestData.is_active,
           created_at: guestData.created_at,
           first_opened_at: guestData.first_opened_at,
+          host_id: hostId,
           rsvp: rsvp || null,
         };
       }
@@ -276,6 +319,7 @@ export async function getGuestByToken(token: string): Promise<Guest | null> {
 
   return {
     ...guest,
+    host_id: guest.host_id || (token.startsWith("gy-") ? "gia_yen" : "thanh_hung"),
     rsvp: store.rsvps[guest.id] || null,
   };
 }
@@ -350,8 +394,10 @@ export async function saveRsvp(
   return rsvp;
 }
 
-export async function getAllGuests(): Promise<Guest[]> {
+export async function getAllGuests(hostId?: string): Promise<Guest[]> {
   const supabase = getSupabaseServerClient();
+  let all: Guest[] = [];
+
   if (supabase) {
     try {
       const { data, error } = await supabase
@@ -362,51 +408,92 @@ export async function getAllGuests(): Promise<Guest[]> {
       if (error) {
         console.warn("Supabase getAllGuests error:", error.message);
       } else if (data) {
-        return (data as unknown as SupabaseGuestRow[]).map((item) => ({
-          id: item.id,
-          name: item.name,
-          invitation_token: item.invitation_token,
-          is_active: item.is_active,
-          created_at: item.created_at,
-          first_opened_at: item.first_opened_at,
-          rsvp: Array.isArray(item.rsvp_responses)
-            ? item.rsvp_responses[0] || null
-            : item.rsvp_responses || null,
-        }));
+        all = (data as unknown as SupabaseGuestRow[]).map((item) => {
+          const itemHost: HostId = (item as any).host_id
+            ? (item as any).host_id
+            : item.invitation_token.startsWith("gy-")
+            ? "gia_yen"
+            : "thanh_hung";
+
+          return {
+            id: item.id,
+            name: item.name,
+            invitation_token: item.invitation_token,
+            is_active: item.is_active,
+            created_at: item.created_at,
+            first_opened_at: item.first_opened_at,
+            host_id: itemHost,
+            rsvp: Array.isArray(item.rsvp_responses)
+              ? item.rsvp_responses[0] || null
+              : item.rsvp_responses || null,
+          };
+        });
       }
     } catch (err) {
       console.warn("Supabase getAllGuests exception:", err);
     }
   }
 
-  const store = getLocalStore();
-  return store.guests.map((g) => ({
-    ...g,
-    rsvp: store.rsvps[g.id] || null,
-  }));
+  if (all.length === 0) {
+    const store = getLocalStore();
+    all = store.guests.map((g) => ({
+      ...g,
+      host_id: g.host_id || (g.invitation_token.startsWith("gy-") ? "gia_yen" : "thanh_hung"),
+      rsvp: store.rsvps[g.id] || null,
+    }));
+  }
+
+  if (!hostId) return all;
+
+  return all.filter((g) => {
+    if (hostId === "gia_yen") {
+      return g.host_id === "gia_yen" || g.invitation_token.startsWith("gy-");
+    }
+    return g.host_id === "thanh_hung" || (!g.host_id && !g.invitation_token.startsWith("gy-"));
+  });
 }
 
-export async function addGuest(name: string): Promise<Guest> {
-  const token = generateInvitationToken();
+export async function addGuest(
+  name: string,
+  hostId: HostId = "thanh_hung"
+): Promise<Guest> {
+  const baseToken = generateInvitationToken();
+  const token = hostId === "gia_yen" ? `gy-${baseToken}` : baseToken;
   const now = new Date().toISOString();
   const supabase = getSupabaseServerClient();
 
   if (supabase) {
-    const { data, error } = await supabase
+    // Try inserting with host_id first
+    let res = await supabase
       .from("guests")
       .insert({
         name: name.trim(),
         invitation_token: token,
         is_active: true,
         created_at: now,
+        host_id: hostId,
       })
       .select()
       .single();
 
-    if (error) {
-      throw new Error(`Lỗi tạo khách mời trên Supabase: ${error.message}`);
+    // If host_id column does not exist yet in Supabase schema, insert without host_id
+    if (res.error && res.error.message.includes("host_id")) {
+      res = await supabase
+        .from("guests")
+        .insert({
+          name: name.trim(),
+          invitation_token: token,
+          is_active: true,
+          created_at: now,
+        })
+        .select()
+        .single();
     }
-    return { ...data, rsvp: null };
+
+    if (res.error) {
+      throw new Error(`Lỗi tạo khách mời trên Supabase: ${res.error.message}`);
+    }
+    return { ...res.data, host_id: hostId, rsvp: null };
   }
 
   const store = getLocalStore();
@@ -417,6 +504,7 @@ export async function addGuest(name: string): Promise<Guest> {
     is_active: true,
     created_at: now,
     first_opened_at: null,
+    host_id: hostId,
     rsvp: null,
   };
   store.guests.unshift(newGuest);
@@ -505,36 +593,58 @@ export async function deleteGuest(id: string): Promise<boolean> {
   return true;
 }
 
-export async function bulkAddGuests(names: string[]): Promise<Guest[]> {
+export async function bulkAddGuests(
+  names: string[],
+  hostId: HostId = "thanh_hung"
+): Promise<Guest[]> {
   const now = new Date().toISOString();
   const cleanNames = names.map((n) => n.trim()).filter((n) => n.length > 0);
   if (cleanNames.length === 0) return [];
 
-  const createdGuests: Guest[] = cleanNames.map((name) => ({
-    id: `g-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    name,
-    invitation_token: generateInvitationToken(),
-    is_active: true,
-    created_at: now,
-    first_opened_at: null,
-    rsvp: null,
-  }));
+  const createdGuests: Guest[] = cleanNames.map((name) => {
+    const baseToken = generateInvitationToken();
+    return {
+      id: `g-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      name,
+      invitation_token: hostId === "gia_yen" ? `gy-${baseToken}` : baseToken,
+      is_active: true,
+      created_at: now,
+      first_opened_at: null,
+      host_id: hostId,
+      rsvp: null,
+    };
+  });
 
   const supabase = getSupabaseServerClient();
   if (supabase) {
-    const rows = createdGuests.map((g) => ({
+    const rowsWithHost = createdGuests.map((g) => ({
       name: g.name,
       invitation_token: g.invitation_token,
       is_active: true,
       created_at: now,
+      host_id: hostId,
     }));
 
-    const { data, error } = await supabase.from("guests").insert(rows).select();
+    let { data, error } = await supabase.from("guests").insert(rowsWithHost).select();
+
+    if (error && error.message.includes("host_id")) {
+      const rowsWithoutHost = createdGuests.map((g) => ({
+        name: g.name,
+        invitation_token: g.invitation_token,
+        is_active: true,
+        created_at: now,
+      }));
+      const fallbackRes = await supabase.from("guests").insert(rowsWithoutHost).select();
+      data = fallbackRes.data;
+      error = fallbackRes.error;
+    }
+
     if (error) {
       throw new Error(`Lỗi tạo hàng loạt trên Supabase: ${error.message}`);
     }
     return ((data || []) as unknown as SupabaseGuestRow[]).map((d) => ({
       ...d,
+      host_id: hostId,
       rsvp: null,
     }));
   }
@@ -545,8 +655,8 @@ export async function bulkAddGuests(names: string[]): Promise<Guest[]> {
   return createdGuests;
 }
 
-export async function getOverviewStats(): Promise<OverviewStats> {
-  const guests = await getAllGuests();
+export async function getOverviewStats(hostId?: string): Promise<OverviewStats> {
+  const guests = await getAllGuests(hostId);
   const activeGuests = guests.filter((g) => g.is_active);
 
   const totalInvitations = activeGuests.length;

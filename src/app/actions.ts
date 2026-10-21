@@ -11,6 +11,9 @@ import {
   deleteGuest,
   bulkAddGuests,
   updateEventSettings,
+  getAllGuests,
+  getOverviewStats,
+  getEventSettings,
 } from "@/lib/db";
 import {
   setAdminSession,
@@ -27,7 +30,7 @@ import {
   updateGuestSchema,
   eventSettingsSchema,
 } from "@/lib/validations";
-import { EventSettings, RsvpStatus } from "@/types";
+import { EventSettings, HostId, RsvpStatus } from "@/types";
 
 // GUEST ACTIONS
 
@@ -117,15 +120,15 @@ export async function adminLogoutAction() {
 
 // ADMIN GUEST MUTATIONS
 
-export async function addGuestAction(name: string) {
+export async function addGuestAction(name: string, hostId: HostId = "thanh_hung") {
   await requireAuth();
-  const parsed = addGuestSchema.safeParse({ name });
+  const parsed = addGuestSchema.safeParse({ name, host_id: hostId });
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message };
   }
 
   try {
-    const guest = await addGuest(parsed.data.name);
+    const guest = await addGuest(parsed.data.name, hostId);
     revalidatePath("/manage-pth-x7k29m");
     return { success: true, guest };
   } catch (err: unknown) {
@@ -176,14 +179,14 @@ export async function deleteGuestAction(id: string) {
   }
 }
 
-export async function bulkAddGuestsAction(names: string[]) {
+export async function bulkAddGuestsAction(names: string[], hostId: HostId = "thanh_hung") {
   await requireAuth();
   if (!Array.isArray(names) || names.length === 0) {
     return { success: false, error: "Danh sách tên không hợp lệ" };
   }
 
   try {
-    const created = await bulkAddGuests(names);
+    const created = await bulkAddGuests(names, hostId);
     revalidatePath("/manage-pth-x7k29m");
     return { success: true, count: created.length, guests: created };
   } catch (err: unknown) {
@@ -195,7 +198,7 @@ export async function bulkAddGuestsAction(names: string[]) {
 
 // ADMIN EVENT SETTINGS
 
-export async function updateSettingsAction(updates: Partial<EventSettings>) {
+export async function updateSettingsAction(updates: Partial<EventSettings>, profileId: string = "default") {
   await requireAuth();
   const parsed = eventSettingsSchema.partial().safeParse(updates);
   if (!parsed.success) {
@@ -203,7 +206,7 @@ export async function updateSettingsAction(updates: Partial<EventSettings>) {
   }
 
   try {
-    const updated = await updateEventSettings(parsed.data);
+    const updated = await updateEventSettings(parsed.data, profileId);
     revalidatePath("/manage-pth-x7k29m");
     revalidatePath("/");
     return { success: true, settings: updated };
@@ -212,4 +215,14 @@ export async function updateSettingsAction(updates: Partial<EventSettings>) {
       err instanceof Error ? err.message : "Lỗi cập nhật cài đặt";
     return { success: false, error: errorMsg };
   }
+}
+
+export async function getAdminDataAction(hostId: HostId) {
+  await requireAuth();
+  const [guests, settings, stats] = await Promise.all([
+    getAllGuests(hostId),
+    getEventSettings(hostId === "gia_yen" ? "gia_yen" : "default"),
+    getOverviewStats(hostId),
+  ]);
+  return { success: true, guests, settings, stats };
 }

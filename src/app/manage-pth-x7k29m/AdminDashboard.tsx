@@ -28,7 +28,7 @@ import {
   Smartphone,
   Monitor,
 } from "lucide-react";
-import { Guest, EventSettings, OverviewStats, RsvpStatus } from "@/types";
+import { Guest, EventSettings, OverviewStats, RsvpStatus, HostId } from "@/types";
 import {
   adminLogoutAction,
   addGuestAction,
@@ -37,6 +37,7 @@ import {
   deleteGuestAction,
   bulkAddGuestsAction,
   updateSettingsAction,
+  getAdminDataAction,
 } from "@/app/actions";
 import { MonogramSeal } from "@/components/MonogramSeal";
 
@@ -53,14 +54,34 @@ export function AdminDashboard({
   initialStats,
   isSupabase,
 }: AdminDashboardProps) {
+  const [currentHost, setCurrentHost] = useState<HostId>("thanh_hung");
   const [activeTab, setActiveTab] = useState<
     "overview" | "guests" | "bulk" | "rsvps" | "designer" | "settings"
   >("overview");
 
   const [guests, setGuests] = useState<Guest[]>(initialGuests);
   const [settings, setSettings] = useState<EventSettings>(initialSettings);
-  const stats = initialStats;
+  const [stats, setStats] = useState<OverviewStats>(initialStats);
   const [isPending, startTransition] = useTransition();
+
+  const handleSwitchHost = (host: HostId) => {
+    if (host === currentHost) return;
+    setCurrentHost(host);
+    startTransition(async () => {
+      const res = await getAdminDataAction(host);
+      if (res.success && res.guests && res.settings && res.stats) {
+        setGuests(res.guests);
+        setSettings(res.settings);
+        setSettingsForm(res.settings);
+        setStats(res.stats);
+        showNotice(
+          `Đã chuyển sang quản lý hồ sơ: ${
+            host === "gia_yen" ? "Lê Gia Yến (CTU)" : "Phan Thành Hưng (FPTU)"
+          }`
+        );
+      }
+    });
+  };
 
   // Toast / Status notice
   const [notice, setNotice] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -101,7 +122,7 @@ export function AdminDashboard({
     if (!newGuestName.trim()) return;
 
     startTransition(async () => {
-      const res = await addGuestAction(newGuestName.trim());
+      const res = await addGuestAction(newGuestName.trim(), currentHost);
       if (res.success && res.guest) {
         setGuests((prev) => [res.guest, ...prev]);
         setNewGuestName("");
@@ -256,7 +277,7 @@ export function AdminDashboard({
     if (parsedBulkNames.length === 0) return;
 
     startTransition(async () => {
-      const res = await bulkAddGuestsAction(parsedBulkNames);
+      const res = await bulkAddGuestsAction(parsedBulkNames, currentHost);
       if (res.success && res.guests) {
         setGuests((prev) => [...res.guests, ...prev]);
         setCreatedBulkGuests(res.guests);
@@ -309,7 +330,10 @@ export function AdminDashboard({
           ...prev,
           graduate_photo_url: data.url,
         }));
-        await updateSettingsAction({ graduate_photo_url: data.url });
+        await updateSettingsAction(
+          { graduate_photo_url: data.url },
+          currentHost === "gia_yen" ? "gia_yen" : "default"
+        );
         setSettings((prev) => ({ ...prev, graduate_photo_url: data.url }));
         showNotice("Đã tải lên và cập nhật ảnh cử nhân thành công!");
       } else {
@@ -342,7 +366,10 @@ export function AdminDashboard({
           ...prev,
           background_music_url: data.url,
         }));
-        await updateSettingsAction({ background_music_url: data.url });
+        await updateSettingsAction(
+          { background_music_url: data.url },
+          currentHost === "gia_yen" ? "gia_yen" : "default"
+        );
         setSettings((prev) => ({ ...prev, background_music_url: data.url }));
         showNotice("Đã tải lên và cập nhật file nhạc thành công!");
       } else {
@@ -358,7 +385,10 @@ export function AdminDashboard({
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     startTransition(async () => {
-      const res = await updateSettingsAction(settingsForm);
+      const res = await updateSettingsAction(
+        settingsForm,
+        currentHost === "gia_yen" ? "gia_yen" : "default"
+      );
       if (res.success && res.settings) {
         setSettings(res.settings);
         showNotice("Đã lưu cài đặt sự kiện thành công!");
@@ -394,28 +424,62 @@ export function AdminDashboard({
       )}
 
       {/* Top Header */}
-      <header className="border-b border-[#D6B675]/20 bg-[#0E1F36]/90 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <MonogramSeal size={38} variant="badge" />
-          <div>
-            <h1 className="font-serif text-base sm:text-lg font-bold text-[#F6F1E8] leading-tight">
-              Quản Trị Thư Mời · Phan Thành Hưng
-            </h1>
-            <p className="text-[11px] text-[#9DAABD] flex items-center gap-2">
-              <span>Lễ Tốt Nghiệp 25.10.2026</span>
-              <span className="text-[#D6B675]">·</span>
-              <span className="inline-flex items-center gap-1">
-                <Database className="w-3 h-3 text-[#D6B675]" />
-                {isSupabase ? "Supabase PostgreSQL" : "Local Storage Mode"}
-              </span>
-            </p>
+      <header className="border-b border-[#D6B675]/20 bg-[#0E1F36]/90 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center justify-between md:justify-start gap-4">
+          <div className="flex items-center gap-3">
+            <MonogramSeal size={38} variant="badge" />
+            <div>
+              <h1 className="font-serif text-base sm:text-lg font-bold text-[#F6F1E8] leading-tight">
+                {currentHost === "gia_yen"
+                  ? "Quản Trị Thư Mời · Lê Gia Yến (Én)"
+                  : "Quản Trị Thư Mời · Phan Thành Hưng"}
+              </h1>
+              <p className="text-[11px] text-[#9DAABD] flex items-center gap-2">
+                <span>
+                  {currentHost === "gia_yen"
+                    ? "ĐH Cần Thơ · 02.11.2026"
+                    : "ĐH FPT Cần Thơ · 25.10.2026"}
+                </span>
+                <span className="text-[#D6B675]">·</span>
+                <span className="inline-flex items-center gap-1">
+                  <Database className="w-3 h-3 text-[#D6B675]" />
+                  {isSupabase ? "Supabase PostgreSQL" : "Local Storage Mode"}
+                </span>
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Dual Profile Switcher Pill */}
+        <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
+          <div className="flex items-center bg-[#071324] p-1 rounded-xl border border-[#D6B675]/30">
+            <button
+              type="button"
+              onClick={() => handleSwitchHost("thanh_hung")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-serif font-bold transition-all cursor-pointer ${
+                currentHost === "thanh_hung"
+                  ? "bg-[#D6B675] text-[#0B1930] shadow-md"
+                  : "text-[#9DAABD] hover:text-[#F6F1E8]"
+              }`}
+            >
+              <span>🎓 Phan Thành Hưng</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSwitchHost("gia_yen")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-serif font-bold transition-all cursor-pointer ${
+                currentHost === "gia_yen"
+                  ? "bg-[#7D1A2A] text-[#FAF5EE] shadow-md"
+                  : "text-[#9DAABD] hover:text-[#F6F1E8]"
+              }`}
+            >
+              <span>🌸 Lê Gia Yến</span>
+            </button>
+          </div>
+
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D6B675]/30 text-xs text-[#9DAABD] hover:text-[#F6F1E8] hover:border-[#D6B675] hover:bg-[#172A46] transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D6B675]/30 text-xs text-[#9DAABD] hover:text-[#F6F1E8] hover:border-[#D6B675] hover:bg-[#172A46] transition-colors cursor-pointer shrink-0"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Đăng Xuất</span>
@@ -1608,6 +1672,63 @@ export function AdminDashboard({
                   <p className="text-[11px] text-[#9DAABD] mt-1">
                     Link trực tiếp đến file âm thanh hoặc file đã tải lên từ máy tính.
                   </p>
+                </div>
+
+                {/* Additional Details for Phone & Parking */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider text-[#D6B675] font-semibold mb-1">
+                      Số Điện Thoại Cử Nhân
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="VD: 0907 612 060"
+                      value={settingsForm.contact_phone || ""}
+                      onChange={(e) =>
+                        setSettingsForm({
+                          ...settingsForm,
+                          contact_phone: e.target.value || null,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#0F1E33] border border-[#D6B675]/30 text-xs text-[#F6F1E8] focus:outline-none focus:border-[#D6B675]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider text-[#D6B675] font-semibold mb-1">
+                      Số Điện Thoại Trợ Lý / Hỗ Trợ
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="VD: 0772 967 049"
+                      value={settingsForm.assistant_phone || ""}
+                      onChange={(e) =>
+                        setSettingsForm({
+                          ...settingsForm,
+                          assistant_phone: e.target.value || null,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#0F1E33] border border-[#D6B675]/30 text-xs text-[#F6F1E8] focus:outline-none focus:border-[#D6B675]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase tracking-wider text-[#D6B675] font-semibold mb-1">
+                    Chỉ Dẫn Cổng Vào & Bãi Gửi Xe
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="VD: Đi từ cổng B vào 50m bên tay trái là hội trường Rùa..."
+                    value={settingsForm.parking_guide || ""}
+                    onChange={(e) =>
+                      setSettingsForm({
+                        ...settingsForm,
+                        parking_guide: e.target.value || null,
+                      })
+                    }
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#0F1E33] border border-[#D6B675]/30 text-xs text-[#F6F1E8] focus:outline-none focus:border-[#D6B675] resize-none"
+                  />
                 </div>
 
                 <div className="pt-4">
