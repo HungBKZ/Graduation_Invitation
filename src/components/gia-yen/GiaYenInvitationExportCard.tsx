@@ -193,19 +193,19 @@ export const GiaYenInvitationExportCard = forwardRef<
       </div>
 
       {/* ========================================================
-          LAYER 3: CENTERPIECE COMPOSITION (Arch Frame + Polaroids)
+          LAYER 3: CENTERPIECE COMPOSITION (Arch Frame + 4 Satellite Polaroids = 5 PHOTOS)
           ======================================================== */}
-      <div className="relative z-20 flex items-center justify-center my-3">
+      <div className="relative z-20 flex items-center justify-center my-1 w-full min-h-[760px]">
         
-        {/* SATELLITE POLAROID 1 (Left - Milestone highlight e.g. Mùa hè xanh / Kỷ niệm) */}
-        {(memoryPhotos[7] || memoryPhotos[2]) && (
-          <div className="absolute -left-2 top-10 w-[320px] p-4 pb-8 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] -rotate-10 border-2 border-[#D1BBA2] z-10">
+        {/* SATELLITE POLAROID 1 (Top-Left - e.g. Trúng tuyển) */}
+        {(memoryPhotos[0] || memoryPhotos[7]) && (
+          <div className="absolute -left-3 top-2 w-[310px] p-3.5 pb-7 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] -rotate-10 border-2 border-[#D1BBA2] z-10">
             {/* Washi Tape Strip */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#E5C378]/80 rotate-[-3deg] rounded-sm shadow-md border-x-2 border-white" />
 
             <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
               <img
-                src={memoryPhotos[7] || memoryPhotos[2]}
+                src={memoryPhotos[0] || memoryPhotos[7]}
                 alt="Memory Polaroid 1"
                 crossOrigin="anonymous"
                 loading="eager"
@@ -213,24 +213,24 @@ export const GiaYenInvitationExportCard = forwardRef<
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="mt-3 flex items-center justify-between px-1">
+            <div className="mt-2.5 flex items-center justify-between px-1">
               <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
-                {getMilestoneTitle(memoryPhotos[7] || memoryPhotos[2], "Mùa hè xanh")}
+                {getMilestoneTitle(memoryPhotos[0] || memoryPhotos[7], "Trúng tuyển")}
               </p>
               <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
             </div>
           </div>
         )}
 
-        {/* SATELLITE POLAROID 2 (Right - Milestone highlight e.g. Hoàn thành Khóa luận / Kỷ niệm) */}
-        {(memoryPhotos[10] || memoryPhotos[3]) && (
-          <div className="absolute -right-2 top-16 w-[320px] p-4 pb-8 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] rotate-9 border-2 border-[#D1BBA2] z-10">
+        {/* SATELLITE POLAROID 2 (Top-Right - e.g. Bài nhóm đầu tiên) */}
+        {(memoryPhotos[1] || memoryPhotos[3]) && (
+          <div className="absolute -right-3 top-6 w-[310px] p-3.5 pb-7 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] rotate-9 border-2 border-[#D1BBA2] z-10">
             {/* Washi Tape Strip */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#E5C378]/80 rotate-[4deg] rounded-sm shadow-md border-x-2 border-white" />
 
             <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
               <img
-                src={memoryPhotos[10] || memoryPhotos[3]}
+                src={memoryPhotos[1] || memoryPhotos[3]}
                 alt="Memory Polaroid 2"
                 crossOrigin="anonymous"
                 loading="eager"
@@ -238,31 +238,70 @@ export const GiaYenInvitationExportCard = forwardRef<
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="mt-3 flex items-center justify-between px-1">
+            <div className="mt-2.5 flex items-center justify-between px-1">
               <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
-                {getMilestoneTitle(memoryPhotos[10] || memoryPhotos[3], "Hoàn thành Khóa luận")}
+                {getMilestoneTitle(memoryPhotos[1] || memoryPhotos[3], "Bài nhóm đầu tiên")}
               </p>
               <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
             </div>
           </div>
         )}
 
-        {/* VINYL RECORD STICKER ACCENT (Peeking from Right Side) */}
-        <div className="absolute -right-8 bottom-4 w-32 h-32 rounded-full bg-[#121212] border-2 border-[#333] shadow-2xl flex items-center justify-center p-2 z-15 rotate-12">
-          <div className="w-24 h-24 rounded-full border border-[#262626] flex items-center justify-center">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-[#580B17] to-[#7D1A2A] border border-[#E5C378] flex items-center justify-center text-center">
-              <span className="text-[7px] text-[#FAF5EE] uppercase font-bold tracking-tighter">
-                Én&apos;s Track
-              </span>
+        {/* SATELLITE POLAROID 3 (Bottom-Left - e.g. Mùa hè xanh / NCKH) */}
+        {(memoryPhotos[7] || memoryPhotos[5] || memoryPhotos[2]) && (
+          <div className="absolute -left-3 top-[370px] w-[310px] p-3.5 pb-7 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] rotate-8 border-2 border-[#D1BBA2] z-15">
+            {/* Washi Tape Strip */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#D1BBA2]/85 rotate-[2deg] rounded-sm shadow-md border-x-2 border-white" />
+
+            <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
+              <img
+                src={memoryPhotos[7] || memoryPhotos[5] || memoryPhotos[2]}
+                alt="Memory Polaroid 3"
+                crossOrigin="anonymous"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="mt-2.5 flex items-center justify-between px-1">
+              <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
+                {getMilestoneTitle(memoryPhotos[7] || memoryPhotos[5] || memoryPhotos[2], "Mùa hè xanh")}
+              </p>
+              <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* MAIN BAROQUE ARCH FRAME (Gia Yến's High-Res Portrait) */}
-        <div className="relative w-[560px] p-5 rounded-[52px] bg-[#FAF5EE] border-4 border-[#E5C378] shadow-[0_30px_70px_rgba(0,0,0,0.85)] z-20">
+        {/* SATELLITE POLAROID 4 (Bottom-Right - e.g. Hoàn thành Khóa luận) */}
+        {(memoryPhotos[10] || memoryPhotos[11] || memoryPhotos[4]) && (
+          <div className="absolute -right-3 top-[390px] w-[310px] p-3.5 pb-7 rounded-2xl bg-[#FFFFFF] shadow-[0_25px_50px_rgba(0,0,0,0.8)] -rotate-9 border-2 border-[#D1BBA2] z-15">
+            {/* Washi Tape Strip */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#D1BBA2]/85 rotate-[-3deg] rounded-sm shadow-md border-x-2 border-white" />
+
+            <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#FAF5EE] border border-[#EADBCE]">
+              <img
+                src={memoryPhotos[10] || memoryPhotos[11] || memoryPhotos[4]}
+                alt="Memory Polaroid 4"
+                crossOrigin="anonymous"
+                loading="eager"
+                decoding="sync"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="mt-2.5 flex items-center justify-between px-1">
+              <p className="text-base text-[#580B17] italic font-handwriting font-bold truncate">
+                {getMilestoneTitle(memoryPhotos[10] || memoryPhotos[11] || memoryPhotos[4], "Hoàn thành Khóa luận")}
+              </p>
+              <span className="text-sm text-[#E5C378] shrink-0 ml-1">✦</span>
+            </div>
+          </div>
+        )}
+
+        {/* MAIN BAROQUE ARCH FRAME (Gia Yến's High-Res Portrait - CENTERPIECE) */}
+        <div className="relative w-[520px] p-4.5 rounded-[50px] bg-[#FAF5EE] border-4 border-[#E5C378] shadow-[0_30px_70px_rgba(0,0,0,0.85)] z-20">
           
           {/* Inner Ornate Arch Container */}
-          <div className="relative w-full aspect-[3.2/4.4] rounded-[42px] overflow-hidden bg-[#2A050B] border-2 border-[#D1BBA2]/80">
+          <div className="relative w-full aspect-[3.2/4.3] rounded-[42px] overflow-hidden bg-[#2A050B] border-2 border-[#D1BBA2]/80">
             <img
               src={graduatePhoto}
               alt="Lê Gia Yến Tân Cử Nhân"
@@ -275,7 +314,7 @@ export const GiaYenInvitationExportCard = forwardRef<
             <div className="absolute inset-0 bg-gradient-to-t from-[#1A0205]/85 via-transparent to-black/20" />
 
             {/* Bottom Floating Plaque */}
-            <div className="absolute bottom-6 left-6 right-6 text-center">
+            <div className="absolute bottom-5 left-6 right-6 text-center">
               <div className="inline-block px-6 py-2 rounded-full bg-[#180205]/85 backdrop-blur-md border border-[#E5C378]/70 shadow-lg">
                 <p className="text-2xl font-serif italic text-[#FAF5EE] font-bold">
                   Lê Gia Yến
@@ -336,83 +375,85 @@ export const GiaYenInvitationExportCard = forwardRef<
 
       {/* ========================================================
           LAYER 4: LUXURY GOLD-FOIL VIP TICKET (Guest Invitation Pass)
-          (Occupies bottom area solidly with zero wasted space!)
+          (Higher prominence, taller, and crystal-clear readable typography)
           ======================================================== */}
-      <div className="relative z-20 w-full max-w-[980px] mx-auto rounded-3xl bg-[#FFFDF9] p-8 text-[#3B0A13] border-4 border-[#E5C378] shadow-[0_25px_60px_rgba(0,0,0,0.8)]">
+      <div className="relative z-20 w-full max-w-[1000px] mx-auto rounded-[36px] bg-[#FFFDF9] p-8 sm:p-10 text-[#3B0A13] border-4 border-[#E5C378] shadow-[0_30px_75px_rgba(0,0,0,0.85)]">
         
         {/* Ticket Notch Cutouts on left & right sides */}
-        <div className="absolute -left-5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#180205] border-r-2 border-[#E5C378]" />
-        <div className="absolute -right-5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#180205] border-l-2 border-[#E5C378]" />
+        <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#180205] border-r-2 border-[#E5C378]" />
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#180205] border-l-2 border-[#E5C378]" />
 
         {/* Inner Gold Stitched Border */}
-        <div className="absolute inset-3 rounded-2xl border border-dashed border-[#C5A059]/80 pointer-events-none" />
+        <div className="absolute inset-3.5 rounded-[28px] border-2 border-dashed border-[#C5A059]/80 pointer-events-none" />
 
         <div className="relative z-10 flex flex-col items-center text-center">
           
           {/* Header Pass Label */}
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#580B17]/10 border border-[#580B17]/25 text-[#580B17] text-xs font-serif uppercase tracking-[0.3em] font-bold">
-            <span>✦</span>
+          <div className="inline-flex items-center gap-2.5 px-6 py-2 rounded-full bg-[#580B17]/10 border-2 border-[#580B17]/30 text-[#580B17] text-sm font-serif uppercase tracking-[0.35em] font-bold">
+            <span className="text-[#C5A059]">✦</span>
             <span>Official VIP Graduation Pass</span>
-            <span>✦</span>
+            <span className="text-[#C5A059]">✦</span>
           </div>
 
-          <p className="text-xs uppercase tracking-[0.35em] text-[#7D1A2A] font-serif font-bold mt-2">
-            Trân trọng kính mời
+          <p className="text-sm uppercase tracking-[0.45em] text-[#7D1A2A] font-serif font-bold mt-2.5">
+            TRÂN TRỌNG KÍNH MỜI
           </p>
 
-          {/* Guest Name in Magnificent Bold Typography */}
-          <h2 className="text-4xl sm:text-5xl font-serif font-black text-[#580B17] mt-1 mb-3 tracking-wide">
+          {/* Guest Name in Huge, Magnificent Bold Typography */}
+          <h2 className="text-6xl sm:text-7xl font-serif font-black text-[#580B17] mt-1 mb-2 tracking-wide drop-shadow-sm">
             {guestName}
           </h2>
 
-          {/* Event Details Grid (2 Gilded Columns) */}
-          <div className="w-full grid grid-cols-2 gap-4 py-3 border-y-2 border-[#D1BBA2]/70 my-2">
+          {/* Event Details Grid (2 Gilded Columns with Big, High-Contrast Text) */}
+          <div className="w-full grid grid-cols-2 gap-6 py-4 border-y-2 border-[#D1BBA2]/80 my-2">
             
             {/* Column 1: Time */}
-            <div className="flex flex-col items-center border-r border-[#D1BBA2]/50 pr-2">
-              <span className="text-[11px] uppercase tracking-widest text-[#7D1A2A] font-bold">
-                Thời Gian Đón Tiếp
+            <div className="flex flex-col items-center border-r-2 border-[#D1BBA2]/60 pr-4">
+              <span className="text-xs uppercase tracking-[0.3em] text-[#7D1A2A] font-bold">
+                THỜI GIAN ĐÓN TIẾP
               </span>
-              <p className="text-2xl font-serif font-black text-[#3B0A13] mt-0.5">
+              <p className="text-5xl font-serif font-black text-[#2A040A] mt-1 tracking-tight">
                 11:00 AM
               </p>
-              <p className="text-xs text-[#580B17] font-serif font-semibold">
+              <p className="text-lg text-[#580B17] font-serif font-bold mt-1">
                 Thứ Hai, Ngày 02/11/2026
               </p>
             </div>
 
             {/* Column 2: Venue */}
-            <div className="flex flex-col items-center pl-2">
-              <span className="text-[11px] uppercase tracking-widest text-[#7D1A2A] font-bold">
-                Địa Điểm Tổ Chức
+            <div className="flex flex-col items-center pl-4">
+              <span className="text-xs uppercase tracking-[0.3em] text-[#7D1A2A] font-bold">
+                ĐỊA ĐIỂM TỔ CHỨC
               </span>
-              <p className="text-2xl font-serif font-black text-[#3B0A13] mt-0.5">
+              <p className="text-4xl sm:text-5xl font-serif font-black text-[#2A040A] mt-1 tracking-tight">
                 Hội trường Rùa
               </p>
-              <p className="text-xs text-[#580B17] font-serif font-semibold">
+              <p className="text-lg text-[#580B17] font-serif font-bold mt-1">
                 Trường Đại học Cần Thơ (Khu II)
               </p>
             </div>
 
           </div>
 
-          {/* Directions Subtext */}
-          <p className="text-xs text-[#7D1A2A] font-serif mt-2 font-medium">
-            📍 Chỉ dẫn: Đi từ <strong>Cổng B</strong> vào 50m bên tay trái • Gửi xe tại <strong>Tòa ATL</strong> hoặc đối diện Hội trường Rùa.
-          </p>
+          {/* Directions Subtext (Prominent pill box) */}
+          <div className="mt-2 w-full max-w-3xl py-2.5 px-6 rounded-2xl bg-[#580B17]/5 border border-[#D1BBA2]/70">
+            <p className="text-base text-[#3B0A13] font-serif font-medium leading-normal">
+              📍 <strong>Chỉ dẫn:</strong> Đi từ <strong>Cổng B</strong> vào 50m bên tay trái • Gửi xe tại <strong>Tòa ATL</strong> hoặc đối diện Hội trường Rùa.
+            </p>
+          </div>
 
           {/* Heartfelt Quote & Barcode */}
-          <div className="mt-3 pt-2.5 border-t border-[#D1BBA2]/40 w-full flex items-center justify-between px-4 text-left">
-            <p className="text-[11px] text-[#580B17] italic font-serif max-w-md">
+          <div className="mt-3.5 pt-3 border-t border-[#D1BBA2]/40 w-full flex items-center justify-between px-3 text-left">
+            <p className="text-sm text-[#580B17] italic font-serif max-w-lg leading-relaxed">
               &ldquo;Một cột mốc thanh xuân đáng nhớ sẽ càng trọn vẹn hơn khi có những người thương quý cùng hiện diện.&rdquo;
             </p>
             
             {/* Decorative Ticket Barcode */}
             <div className="flex flex-col items-end">
-              <span className="font-mono text-xs tracking-widest text-[#3B0A13]">
+              <span className="font-mono text-base tracking-widest text-[#2A040A] font-bold">
                 |||| | ||||| ||| ||||||| |
               </span>
-              <span className="text-[9px] font-mono uppercase tracking-wider text-[#7D1A2A]">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#7D1A2A] font-bold mt-0.5">
                 LGY-CTU-2026-VIP
               </span>
             </div>
